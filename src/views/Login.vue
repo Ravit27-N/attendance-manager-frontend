@@ -31,6 +31,7 @@
                             name="Email"
                             append-icon="mdi-email"
                             type="email"
+                            required
                             outlined
                             clearable
                           ></v-text-field>
@@ -38,15 +39,15 @@
                           <v-text-field
                             solo
                             label="Enter your password"
-                            append-icon="mdi-lock"
+                            :type="show1 ? 'text' : 'password'"
                             outlined
-                            type="password"
-                            clearable
+                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append="show1 = !show1"
                           ></v-text-field>
-                         
-                          
+                          <a href class="text-left forgotlink">Forgot password?</a>
+                        
                         </div>
-                        <a href class="text-left forgotlink">Forgot password?</a>
+                        
                       </v-card-text>
                       <div class="text-center mt-3">
                         <v-btn rounded color="white" class="btn-login">Log In</v-btn>
@@ -66,7 +67,8 @@
   <script>
 export default {
   data: () => ({
-    step: 1
+    step: 1,
+    show1: false,
   }),
   props: {
     source: String
@@ -94,7 +96,7 @@ export default {
 }
 .btn-login {
   color: #0062e0;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 .image {
   width: 30vw;
@@ -105,15 +107,27 @@ export default {
 .forgotlink {
   text-align: left;
   color: white;
+  margin-left: 1rem;
   text-decoration: none;
+  font-size: 1rem;
 }
 .form-input{
   margin-top: 1rem;
+  padding: 0px 1.5rem;
 }
 .form-input label{
   color: white;
   font-size: 1rem;
-  margin-left: 0.3rem;
+  margin: 0.3rem;
+  font-size: 1.2rem;
 }
-
+.form-input .v-text-field{
+  font-size: 1.2rem;
+}
+.contain-input{
+  display: flex;
+}
+.input-box{
+  width:150vw;
+}
 </style>
