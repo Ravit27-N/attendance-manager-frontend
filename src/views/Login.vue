@@ -1,14 +1,14 @@
 <template>
   <v-app id="inspire">
     <v-content>
-      <v-container class="fill-height contain-image" fluid>
+      <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="8">
             <v-card class="elevation-12">
               <v-window v-model="step">
                 <v-window-item :value="1">
                   <v-row>
-                    <v-col cols="12" md="6" class="gray">
+                    <v-col cols="12" md="6" class="gray contain-image">
                       <v-card-text class="mt-12">
                         <h3 class="title-image welcome display-1">Welcome Back!</h3>
                         <h3 class="title-image">Login and start engaging your data!</h3>
@@ -74,6 +74,9 @@ export default {
 };
 </script>
 <style scoped>
+.contain-image{
+  background-color: #F3F1F1;
+}
 .title-image {
   margin-left: 1rem;
   color: #0062e0;
@@ -87,10 +90,11 @@ export default {
 }
 .contain-login img {
   width: 5vw;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.3rem ;
 }
 .btn-login {
-  margin-bottom: 3rem;
+  color: #0062e0;
+  font-size: 1rem;
 }
 .image {
   width: 30vw;
