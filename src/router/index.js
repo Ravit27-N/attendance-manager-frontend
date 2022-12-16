@@ -10,7 +10,7 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: {
-      header: 1
+      header: 0
     }
   },
   {
@@ -30,19 +30,19 @@ const routes = [
     }
   },
   {
+    path: '/admin',
+    name: 'Test',
+    component: () => import('../views/Dashboard.vue'),
+    meta: {
+      header: 1
+    }
+  },
+  {
     path: '/test',
     name: 'Test',
     component: () => import('../views/Test.vue'),
     meta: {
-      header: 0
-    }
-  },
-  {
-    path: '/attendance-register',
-    name: 'attendance',
-    component: () => import('../views/Registerattendance.vue'),
-    meta: {
-      header: 0
+      header: 1
     }
   }
 ]
