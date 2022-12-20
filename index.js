@@ -5,9 +5,11 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: '*',
   credentials: true
-}))
+}));
+app.use("/uploads",express.static('uploads'));
+
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
