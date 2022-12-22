@@ -12,15 +12,41 @@ exports.getAllstudent = async (req, res, next) => {
 
 exports.createNewStudent = async (req, res, next) => {
   try {
-    let { student_id,name, gender,dob,province,year_department,department,option } = req.body;
-    
-    this.imageurl=imageurl;
-
-    let student = new Student(student_id,name,gender,dob,province,year_department,department,option);
+    let {student_id,name, gender,dob,province,year_department,department,option } = req.body;
+  
+    if(req.file){
+      var baseUrl = "http://localhost:3000/uploads/"+req.file.filename;
+    }else{
+      var baseUrl = "";
+    }
+    var imageurl=baseUrl;
+    let student = new Student(student_id,name,gender,dob,province,year_department,department,option,imageurl);
+   
     student = await student.save();
-
-    res.status(201).json({ message: "Post created" });
+    res.status(201).json({ message: "Student created" });
   } catch (error) {
+    console.log("Error 2");
+    next(error);
+  }
+};
+
+exports.UpdateStudent = async (req, res, next) => {
+  try {
+    let {student_id,name, gender,dob,province,year_department,department,option } = req.body;
+    var id = req.params.id;
+  
+    if(req.file){
+      var baseUrl = "http://localhost:3000/uploads/"+req.file.filename;
+    }else{
+      var baseUrl = "";
+    }
+    var imageurl=baseUrl;
+    let student = new Student(student_id,name,gender,dob,province,year_department,department,option,imageurl);
+   
+    student = await student.edit(id);
+    res.status(201).json({ message: "Student modified" });
+  } catch (error) {
+    console.log("Error 2");
     next(error);
   }
 };
@@ -40,7 +66,7 @@ exports.test = async (req, res, next) => {
   try {
 
     if(req.file){
-      var baseUrl = "http://localhost:3001/uploads/"+req.file.filename;
+      var baseUrl = "http://localhost:3000/uploads/"+req.file.filename;
     }else{
       var baseUrl = "";
     }

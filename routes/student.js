@@ -22,6 +22,8 @@ router
   .get(studentController.getAllstudent)
   .post(upload.single("image"),studentController.createNewStudent);
 router.route("/test").post(upload.single("image"),studentController.test);
-router.route("/:id").get(studentController.getStudentById);
+router.route("/:id")
+      .get(studentController.getStudentById)
+      .put(upload.single("image"),studentController.UpdateStudent);
 
 module.exports = router;
