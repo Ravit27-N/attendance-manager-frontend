@@ -24,7 +24,7 @@
                 hide-details
               ></v-text-field>
             </v-card-title>
-            <v-data-table :headers="headers" :items="desserts" :search="search"></v-data-table>
+            <v-data-table :headers="headers" :items="students" :search="search"></v-data-table>
           </v-card>
         </div>
       </v-col>
@@ -33,6 +33,8 @@
 </template>
 <script>
 import DashCard from "@/components/DashCard.vue";
+import axios from "axios";
+import moment from "moment";
 
 export default {
   components: {
@@ -73,14 +75,15 @@ export default {
         text: "Student_id",
         align: "start",
         sortable: true,
-        value: "student_id",
+        value: "student_id"
       },
       { text: "Name", value: "name" },
       { text: "Gender", value: "gender" },
-      { text: "Department", value: "year_dept" },
-      { text: "Join Time", value: "created" }
+      { text: "Option", value: "option" },
+      { text: "Join Time", value: "created" },
+
     ],
-    desserts: [
+    students: [
       {
         student_id: "e20180328",
         name: "Hun Ravit",
@@ -99,7 +102,7 @@ export default {
         student_id: "e20180328",
         name: "Hun Ravit",
         gender: "Male",
-        year_dept: "I5GIC",
+        year_dept: "GIM",
         created: "6:00 pm"
       },
       {
@@ -108,13 +111,34 @@ export default {
         gender: "Male",
         year_dept: "I5GIC",
         created: "5:00 pm"
-      },
-    ]
+      }
+    ],
+    data: []
   }),
   methods: {
-    btnClick() {
-      alert(this.getinput);
+    moment: function(date) {
+      return moment(date).format("h:mm a, dddd Do MMMM YYYY");
+    },
+    getattendance() {
+      axios
+        .get(`http://localhost:3000/attendance`)
+        .then(response => (this.info = response))
+        .then(() => {
+          if (this.info) {
+            console.log(this.info.data.attendances);
+            this.students = this.info.data.attendances;
+            let i = 0;
+            for (i in this.students) {
+              this.students[i].created = this.moment(this.students[i].created);
+
+              console.log(this.students[i].created)
+            }
+          }
+        });
     }
+  },
+  mounted() {
+    this.getattendance();
   }
 };
 </script>
@@ -130,5 +154,4 @@ export default {
 .cardtitle {
   color: white;
 }
-
 </style>

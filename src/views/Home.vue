@@ -5,9 +5,13 @@
         <v-row align="center">
           <v-col cols="12" sm="12" md="12">
             <div class="row1">
-              <a href="/#"><img src="../assets/Stemlogo.png" width="75" height="75" alt /></a>
+              <a href="/#">
+                <img src="../assets/Stemlogo.png" width="75" height="75" alt />
+              </a>
               <div class="space"></div>
-              <a href="/#"><img src="../assets/user-2.png" width="75" height="75" alt /></a>
+              <a href="/#">
+                <img src="../assets/user-2.png" width="75" height="75" alt />
+              </a>
             </div>
             <div class="row2">
               <div class="welcome">
@@ -22,19 +26,21 @@
               </div>
             </div>
             <div class="row3">
-              <div class="input-box">
+              <v-form class="input-box"  ref="form">
                 <v-row class="pt-7">
                   <v-text-field
                     class="mr-2"
                     solo
-                    placeholder="Please enter your student's id"
+                    placeholder="Please enter your student's Id"
                     outlined
                     clearable
+                    v-model="submit_data.student_id"
+                    :rules="studentIdRules"
                   ></v-text-field>
-                  <v-btn class="btn-submit " dark x-large color="blue">SUBMIT</v-btn>
+                  <v-btn class="btn-submit" @click="submit_from" dark x-large color="blue">SUBMIT</v-btn>
                 </v-row>
                 <p class="example-id">Example: e20180328</p>
-              </div>
+              </v-form>
             </div>
             <div class="row4 mb-3">
               <v-row class="pt-5 justify-center">
@@ -48,7 +54,7 @@
                     </div>
 
                     <div class="logoschool mb-2 px-12" align="center">
-                      <img src="../assets/e20180328.jpg" alt height="150" />
+                      <img :src="item.imageurl" alt height="150" />
                     </div>
 
                     <div class="student-name mb-3" align="center">
@@ -57,7 +63,6 @@
                     </div>
                   </v-card>
                 </div>
-               
               </v-row>
             </div>
           </v-col>
@@ -67,8 +72,14 @@
   </v-app>
 </template>
 <script>
+import axios from "axios";
 export default {
   data: () => ({
+    studentIdRules: [
+
+      // v => (v && v.length == 9) || "Student ID must be 9 characters"
+    ],
+    submit_data: { student_id: "" },
     lastfivestudent: [
       {
         id: 1,
@@ -107,20 +118,57 @@ export default {
       setInterval(() => {
         this.ishidden = !this.ishidden;
       }, 2000);
+    },
+    get_lastfive_attendance() {
+      axios
+        .get(`http://localhost:3000/attendance/lastfive`)
+        .then(response => (this.info = response))
+        .then(() => {
+          if (this.info) {
+            let i = 0;
+            console.log(this.info.data.attendance);
+            this.lastfivestudent = this.info.data.attendance;
+            for (i in this.lastfivestudent) {
+              if (this.lastfivestudent[i].imageurl == null) {
+                this.lastfivestudent[i].imageurl =
+                  "http://localhost:3000/uploads/guest.jpg";
+              }
+              if (this.lastfivestudent[i].name == null) {
+                this.lastfivestudent[i].name = "Guest";
+              }
+            }
+          }
+        });
+    },
+    submit_from() {
+      if (this.submit_data.student_id.length != 9) {
+        alert("Student ID must be 9 characters");
+      } else {
+        axios
+          .post(`http://localhost:3000/attendance`, this.submit_data)
+          .then(response => (this.info = response))
+          .then(() => {
+            if (this.info.statusText == "Created") {
+              this.get_lastfive_attendance();
+              this.$refs.form.reset();
+            } else {
+              alert("Cannot submit");
+            }
+          });
+      }
     }
   },
   mounted() {
     this.animationwelcome();
+    this.get_lastfive_attendance();
   }
 };
 </script>
 <style scoped>
-
 #inspire {
   background-image: url("../assets/backgroundRegister.png");
- 
 }
-.btn-submit{
+.btn-submit {
   padding: 15px;
 }
 .row1 {
@@ -162,5 +210,8 @@ export default {
 .row4 .department {
   background-color: #0062e0;
   color: white;
+}
+.v-messages__message {
+  color: aqua;
 }
 </style>

@@ -44,7 +44,16 @@ const routes = [
     meta: {
       header: 1
     }
+  },
+  {
+    path: '/student',
+    name: 'Test',
+    component: () => import('../views/Student.vue'),
+    meta: {
+      header: 1
+    }
   }
+
 ]
 
 const router = new VueRouter({

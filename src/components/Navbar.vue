@@ -21,7 +21,7 @@
         <v-tab class="menu-tab" href="/admin">Home</v-tab>
         <v-tab class="menu-tab" href="#test">Attendance</v-tab>
         <v-tab class="menu-tab" href="#chart">Chart</v-tab>
-        <v-tab class="menu-tab" href="#student">Student</v-tab>
+        <v-tab class="menu-tab" href="/student">Student</v-tab>
       </v-tabs>
     </div>
     <v-spacer></v-spacer>
