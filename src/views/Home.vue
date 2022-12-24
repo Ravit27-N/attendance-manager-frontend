@@ -80,38 +80,7 @@ export default {
       // v => (v && v.length == 9) || "Student ID must be 9 characters"
     ],
     submit_data: { student_id: "" },
-    lastfivestudent: [
-      {
-        id: 1,
-        name: "Hun Ravit",
-        student_id: "e20180328",
-        img_url: "../assets/e20180328.jpg"
-      },
-      {
-        id: 2,
-        name: "Hai Mengkuong",
-        student_id: "e20180236",
-        img_url: "../assets/e20180236.jpg"
-      },
-      {
-        id: 3,
-        name: "Chhon Devit",
-        student_id: "e20180113",
-        img_url: "../assets/e20180113.jpg"
-      },
-      {
-        id: 4,
-        name: "Keo Linna",
-        student_id: "e20180368",
-        img_url: "../assets/e20180236.jpg"
-      },
-      {
-        id: 5,
-        name: "Hourt Koemly",
-        student_id: "e20180325",
-        img_url: "../assets/e20180113.jpg"
-      }
-    ]
+    lastfivestudent: []
   }),
   methods: {
     animationwelcome() {
