@@ -74,6 +74,11 @@ class Student {
     return db.execute(sql);
   }
 
+  static DeletebyId(id) {
+    let sql = `Delete FROM students where id=${id};`;
+    return db.execute(sql);
+  }
+
   static findAll() {
     let sql = "SELECT * FROM students;";
     return db.execute(sql);

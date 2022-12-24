@@ -13,6 +13,8 @@ exports.getAllstudent = async (req, res, next) => {
 exports.createNewStudent = async (req, res, next) => {
   try {
     let {student_id,name, gender,dob,province,year_department,department,option } = req.body;
+
+    console.log(req.body);
   
     if(req.file){
       var baseUrl = "http://localhost:3000/uploads/"+req.file.filename;
@@ -58,6 +60,18 @@ exports.getStudentById = async (req, res, next) => {
     let [student, _] = await Student.findById(studentId);
 
     res.status(200).json({ student: student[0] });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteStudentById = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+
+    let student = await Student.DeletebyId(id);
+
+    res.status(200).json({ message: "Student deleted" });
   } catch (error) {
     next(error);
   }

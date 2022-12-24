@@ -64,35 +64,29 @@ exports.UpdateStudent = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-
     const { username, password } = req.body;
 
     if (!(username && password)) {
       res.status(400).send("All input is required");
     }
-
     var email = username;
 
     let [user, _] = await User.findByUsernameOrEmail(username, email);
-
     const comparepassword = await bcrypt.compare(password, user[0].password);
 
-    console.log(password+"||"+user[0].password);
-    console.log(comparepassword);
-    if (user.length > 0 && (await bcrypt.compare(password, user[0].password))) {
+    if (user.length > 0 && comparepassword) {
       // Create token
       const token = jwt.sign(
         { user_id: user._id, email },
         process.env.TOKEN_KEY,
         { expiresIn: "8h" }
       );
-
-      // save user token
-      user.token = token;
       // user
-      res.status(200).json(user);
+      res.status(200).json({user:user,token:token});
+    }else{
+      res.status(400).send("Invalid Credentials");
     }
-    res.status(400).send("Invalid Credentials");
+  
   } catch (error) {
     next(error);
   }
