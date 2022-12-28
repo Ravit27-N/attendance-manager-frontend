@@ -9,7 +9,8 @@
           <DashCard title="Year" number="1120" picture_name="year-icon.png" />
         </div>
         <div class="row2 barchart-group mx-10 mt-10">
-          <apexchart height="300px" type="bar" :options="options" :series="series"></apexchart>
+          <apexchart height="300px" type="bar" :options="options" :series="series" ref="myChart"></apexchart>
+  
         </div>
         <div class="row3 mx-10 my-10">
           <v-card>
@@ -38,35 +39,40 @@ import moment from "moment";
 
 export default {
   components: {
-    DashCard
+    DashCard,
+
   },
   data: () => ({
+    testKey :1,
     options: {
       chart: {
-        id: "barchart-month"
+        id: "barchart-month",
+        type: "bar",
+        events: {
+        
+        }
+      },
+      title: {
+        text: "Daily Attendance",
+        align: "center",
+        style: {
+          fontSize: "20px"
+        }
       },
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec"
-        ]
+        categories: [],
+        labels: {
+          style: {
+            colors: ["#F44336", "#C9F400", "#9C27B0"],
+            fontSize: "1rem"
+          }
+        }
       }
     },
     series: [
       {
         name: "Student",
-        color: "#0062E0",
-        data: [55, 62, 89, 66, 98, 72, 101, 75, 94, 120, 117, 139]
+        data: []
       }
     ],
     search: "",
@@ -80,8 +86,7 @@ export default {
       { text: "Name", value: "name" },
       { text: "Gender", value: "gender" },
       { text: "Option", value: "option" },
-      { text: "Join Time", value: "created" },
-
+      { text: "Join Time", value: "created" }
     ],
     students: [
       {
@@ -115,6 +120,11 @@ export default {
     ],
     data: []
   }),
+  created() {},
+  mounted() {
+    this.getattendance();
+    this.getdailyattendance();
+  },
   methods: {
     moment: function(date) {
       return moment(date).format("h:mm a, dddd Do MMMM YYYY");
@@ -125,20 +135,41 @@ export default {
         .then(response => (this.info = response))
         .then(() => {
           if (this.info) {
-            console.log(this.info.data.attendances);
+            // console.log(this.info.data.attendances);
             this.students = this.info.data.attendances;
             let i = 0;
             for (i in this.students) {
               this.students[i].created = this.moment(this.students[i].created);
-
-              console.log(this.students[i].created)
             }
           }
         });
+    },
+    getdailyattendance() {
+      axios
+        .get(`http://localhost:3000/chart/today`)
+        .then(response => (this.info = response))
+        .then(() => {
+          if (this.info) {
+            let i = 0;
+            // console.log(this.info.data.data);
+            let getdata = this.info.data.data;
+            let categories = [];
+            let data = [];
+            for (i in getdata) {
+              if (getdata[i].count != 0) {
+                categories[i] = getdata[i].category;
+                data[i] = getdata[i].count;
+              }
+            }
+            this.options.xaxis.categories = categories;
+            this.series[0].data = data;
+            
+            this.$refs.myChart.refresh();
+          
+            
+          }
+        });
     }
-  },
-  mounted() {
-    this.getattendance();
   }
 };
 </script>
