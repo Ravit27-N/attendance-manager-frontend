@@ -97,6 +97,13 @@ export default {
         width: 380,
         type: "pie"
       },
+      title: {
+        text: "Daily Attendance",
+        align: "center",
+        style: {
+          fontSize: "20px"
+        }
+      },
       labels: [],
       responsive: [
         {

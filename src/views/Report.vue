@@ -64,8 +64,11 @@
       </v-col>
     </div>
     <div class="row2">
-      <v-btn depressed class="mr-5" color="primary" @click="getdata">Get Data</v-btn>
-      <v-btn depressed color="primary" @click="exportexcel">Export Excel</v-btn>
+      <v-btn depressed class="mr-5" color="primary" @click="getdata">
+        Get Data
+        <v-icon right dark>mdi-share</v-icon>
+      </v-btn>
+      <v-btn depressed color="primary" @click="exportexcel">Export Excel <v-icon right dark>mdi-file-download</v-icon></v-btn>
     </div>
     <div class="row3 mx-10 my-10">
       <v-card>
@@ -113,7 +116,7 @@ export default {
         value: "student_id"
       },
       { text: "Name", value: "name" },
-      { text: "Gender", value: "gender"},
+      { text: "Gender", value: "gender" },
       { text: "Option", value: "option" },
       { text: "Join Time", value: "created" }
     ],
@@ -151,15 +154,17 @@ export default {
             console.log(this.students.created);
             let i = 0;
             for (i in this.students) {
-              this.students[i].created = moment(this.students[i].created).format("DD/MM/YYYY h:mm a");
+              this.students[i].created = moment(
+                this.students[i].created
+              ).format("DD/MM/YYYY h:mm a");
             }
           }
         });
     },
-    getdata(){
+    getdata() {
       this.getattendance();
     },
-    exportexcel(){
+    exportexcel() {
       alert("Export data");
     }
   }
@@ -173,7 +178,7 @@ export default {
   justify-content: center;
   vertical-align: middle;
 }
-.row2{
+.row2 {
   width: 100%;
   display: flex;
   align-items: center;

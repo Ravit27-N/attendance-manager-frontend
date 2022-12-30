@@ -60,6 +60,14 @@ const routes = [
     meta: {
       header: 1
     }
+  },
+  {
+    path: '/chart',
+    name: 'Chart',
+    component: () => import('../views/Chart.vue'),
+    meta: {
+      header: 1
+    }
   }
 
 ]
