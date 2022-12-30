@@ -1,7 +1,7 @@
 const db = require("../config/db");
 const moment = require("moment");
 
-class Chart {
+class Report {
 
 
 
@@ -18,9 +18,16 @@ class Chart {
 
   }
 
+  static findByStartDateAndEndDate(startDate,endDate) {
+    let sql = `SELECT stu.* , att.created
+    FROM attendances as att JOIN students AS stu on att.student_id = stu.student_id
+    where date(att.created) >= '${startDate}' AND date(att.created) <= '${endDate}' ;`;
+    return db.execute(sql);
+  }
+
 
 
 }
 
-module.exports = Chart;
+module.exports = Report;
 
