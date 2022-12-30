@@ -19,6 +19,30 @@ class Chart {
   }
 
 
+  static count_attendance_startdate_enddate_by_departmentyear(startDate,endDate) {
+    var currentTime = new Date();
+    const convertTime = moment(currentTime).format("YYYY-MM-DD");
+
+    let sql = `SELECT stu.year_department as category, COUNT(*) AS count
+    FROM attendances as att JOIN students AS stu on att.student_id = stu.student_id
+    where date(att.created) >= '${startDate}' AND date(att.created) <= '${endDate}'
+	 GROUP BY stu.year_department;`;
+    return db.execute(sql);
+  }
+
+  static count_attendance_startdate_enddate_by_daily(startDate,endDate) {
+    var currentTime = new Date();
+    const convertTime = moment(currentTime).format("YYYY-MM-DD");
+
+    let sql = `SELECT date(att.created) as category, COUNT(*) AS count
+    FROM attendances as att JOIN students AS stu on att.student_id = stu.student_id
+    where date(att.created) >= '${startDate}' AND date(att.created) <= '${endDate}'
+	 GROUP BY date(att.created);`;
+    return db.execute(sql);
+
+  }
+
+
 
 }
 
