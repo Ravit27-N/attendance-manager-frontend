@@ -20,6 +20,7 @@
       <div id="nav">
         <router-link class="menu" :active="active" to="/admin">Home</router-link>
         <router-link class="menu" :active="active" to="/student">Student</router-link>
+        <router-link class="menu" :active="active" to="/report">Report</router-link>
       </div>
     </div>
     <v-spacer></v-spacer>

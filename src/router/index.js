@@ -47,8 +47,16 @@ const routes = [
   },
   {
     path: '/student',
-    name: 'Test',
+    name: 'student',
     component: () => import('../views/Student.vue'),
+    meta: {
+      header: 1
+    }
+  },
+  {
+    path: '/report',
+    name: 'Report',
+    component: () => import('../views/Report.vue'),
     meta: {
       header: 1
     }

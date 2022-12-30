@@ -9,13 +9,28 @@
           <DashCard title="Year" number="1120" picture_name="year-icon.png" />
         </div>
         <div class="row2 barchart-group mx-10 mt-10">
-          <apexchart height="300px" type="bar" :options="options" :series="series" ref="myChart"></apexchart>
-  
+          <apexchart
+            height="300px"
+            class="barchart"
+            type="bar"
+            :options="options_bar"
+            :series="series_bar"
+            ref="myChart"
+          ></apexchart>
+
+          <apexchart
+            type="pie"
+            class="peichart"
+            height="300px"
+            :options="options_pei"
+            :series="series_pei"
+            ref="myChart2"
+          ></apexchart>
         </div>
         <div class="row3 mx-10 my-10">
           <v-card>
             <v-card-title>
-              Nutrition
+              Attendances
               <v-spacer></v-spacer>
               <v-text-field
                 v-model="search"
@@ -25,7 +40,11 @@
                 hide-details
               ></v-text-field>
             </v-card-title>
-            <v-data-table :headers="headers" :items="students" :search="search"></v-data-table>
+            <v-data-table :headers="headers" :items="students" :search="search">
+              <template v-slot:item.imageurl="{ item }">
+                <img class="small-image" :src="item.imageurl" style="width: 25px; height:30px" />
+              </template>
+            </v-data-table>
           </v-card>
         </div>
       </v-col>
@@ -39,18 +58,15 @@ import moment from "moment";
 
 export default {
   components: {
-    DashCard,
-
+    DashCard
   },
   data: () => ({
-    testKey :1,
-    options: {
+    testKey: 1,
+    options_bar: {
       chart: {
         id: "barchart-month",
         type: "bar",
-        events: {
-        
-        }
+        events: {}
       },
       title: {
         text: "Daily Attendance",
@@ -69,14 +85,41 @@ export default {
         }
       }
     },
-    series: [
+    series_bar: [
       {
         name: "Student",
         data: []
       }
     ],
+    series_pei: [],
+    options_pei: {
+      chart: {
+        width: 380,
+        type: "pie"
+      },
+      labels: [],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ]
+    },
     search: "",
     headers: [
+      {
+        text: "Image",
+        align: "center",
+        sortable: false,
+        value: "imageurl"
+      },
       {
         text: "Student_id",
         align: "start",
@@ -120,14 +163,13 @@ export default {
     ],
     data: []
   }),
-  created() {},
   mounted() {
     this.getattendance();
     this.getdailyattendance();
   },
   methods: {
     moment: function(date) {
-      return moment(date).format("h:mm a, dddd Do MMMM YYYY");
+      return moment(date).format("DD/MM/YYYY h:mm a");
     },
     getattendance() {
       axios
@@ -161,12 +203,15 @@ export default {
                 data[i] = getdata[i].count;
               }
             }
-            this.options.xaxis.categories = categories;
-            this.series[0].data = data;
-            
+
+            this.options_bar.xaxis.categories = categories;
+            this.series_bar[0].data = data;
+
+            this.options_pei.labels = categories;
+            this.series_pei = data;
+
             this.$refs.myChart.refresh();
-          
-            
+            this.$refs.myChart2.refresh();
           }
         });
     }
@@ -184,5 +229,18 @@ export default {
 }
 .cardtitle {
   color: white;
+}
+.row2 {
+  display: flex;
+  justify-content: center;
+}
+chart {
+  width: "100%";
+}
+.row2 .barchart {
+  width: 70%;
+}
+.row2 .peichart {
+  width: 30%;
 }
 </style>
