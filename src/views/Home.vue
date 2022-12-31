@@ -26,7 +26,7 @@
               </div>
             </div>
             <div class="row3">
-              <v-form class="input-box"  ref="form">
+              <v-form class="input-box" ref="form">
                 <v-row class="pt-7">
                   <v-text-field
                     class="mr-2"
@@ -36,6 +36,7 @@
                     clearable
                     v-model="submit_data.student_id"
                     :rules="studentIdRules"
+                    @keydown.enter.prevent="submit_from"
                   ></v-text-field>
                   <v-btn class="btn-submit" @click="submit_from" dark x-large color="blue">SUBMIT</v-btn>
                 </v-row>
@@ -76,7 +77,6 @@ import axios from "axios";
 export default {
   data: () => ({
     studentIdRules: [
-
       // v => (v && v.length == 9) || "Student ID must be 9 characters"
     ],
     submit_data: { student_id: "" },
@@ -95,7 +95,7 @@ export default {
         .then(() => {
           if (this.info) {
             let i = 0;
-            console.log(this.info.data.attendance);
+            // console.log(this.info.data.attendance);
             this.lastfivestudent = this.info.data.attendance;
             for (i in this.lastfivestudent) {
               if (this.lastfivestudent[i].imageurl == null) {
@@ -110,21 +110,40 @@ export default {
         });
     },
     submit_from() {
-      if (this.submit_data.student_id.length != 9) {
-        alert("Student ID must be 9 characters");
+      if (this.submit_data.student_id.length <= 0) {
+        alert("Student ID must be input");
       } else {
-        axios
-          .post(`http://localhost:3000/attendance`, this.submit_data)
-          .then(response => (this.info = response))
-          .then(() => {
-            if (this.info.statusText == "Created") {
-              this.get_lastfive_attendance();
-              this.$refs.form.reset();
-            } else {
-              alert("Cannot submit");
-            }
-          });
+        this.get_student_by_id();
       }
+    },
+    upload_attendance() {
+      axios
+        .post(`http://localhost:3000/attendance`, this.submit_data)
+        .then(response => (this.info = response))
+        .then(() => {
+          if (this.info.statusText == "Created") {
+            this.get_lastfive_attendance();
+            this.$refs.form.reset();
+          } else {
+            alert("Cannot submit");
+          }
+        });
+    },
+    get_student_by_id() {
+      axios
+        .post(`http://localhost:3000/student/studentid`, this.submit_data)
+        .then(response => (this.info = response))
+        .then(() => {
+          if (this.info) {
+            // console.log(this.info.data);
+
+            if (this.info.data.student == null) {
+              alert("Please register before join library");
+            } else {
+              this.upload_attendance();
+            }
+          }
+        });
     }
   },
   mounted() {

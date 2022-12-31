@@ -81,10 +81,7 @@
         Get Data
         <v-icon right dark>mdi-share</v-icon>
       </v-btn>
-      <v-btn depressed color="primary" @click="exportexcel">
-        Export Excel
-        <v-icon right dark>mdi-file-download</v-icon>
-      </v-btn>
+      
     </div>
     <div class="row3 barchart-group mx-10 mt-10">
       <apexchart
@@ -226,6 +223,36 @@ export default {
           }
         });
     },
+    getAttendanceMonthly() {
+      var submit_data = {
+        start_date: this.start_date,
+        end_date: this.end_date
+      };
+      axios
+        .post(`http://localhost:3000/chart/monthly`, submit_data)
+        .then(response => (this.info = response))
+        .then(() => {
+          if (this.info) {
+          //  console.log(this.info.data);
+            let i = 0;
+            // console.log(this.info.data.data);
+            let getdata = this.info.data.data;
+            let categories = [];
+            let data = [];
+            for (i in getdata) {
+              if (getdata[i].count != 0) {
+                categories[i] =  moment(getdata[i].category).format("YYYY-MM");
+                data[i] = getdata[i].count;
+              }
+            }
+
+            this.options_bar.xaxis.categories = categories;
+            this.series_bar[0].data = data;
+
+            this.$refs.myChart.refresh();
+          }
+        });
+    },
     getdata() {
       if (this.selectOption == "Department") {
         // alert("Select Department");
@@ -234,7 +261,7 @@ export default {
         // alert("Select dialy");
         this.getAttendanceDaily();
       } else {
-        alert("Select montly");
+        this.getAttendanceMonthly();
       }
       this.getattendance();
     }

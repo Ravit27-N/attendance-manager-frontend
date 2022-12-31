@@ -5,7 +5,7 @@
       <div>
         <v-btn depressed color="primary">From</v-btn>
       </div>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" md="4" class="mt-8">
         <v-menu
           ref="menu"
           v-model="menu"
@@ -23,19 +23,20 @@
               readonly
               v-bind="attrs"
               v-on="on"
+              solo
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" no-title scrollable>
+          <v-date-picker v-model="start_date" no-title scrollable>
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+            <v-btn text color="primary" @click="$refs.menu.save(end_date)">OK</v-btn>
           </v-date-picker>
         </v-menu>
       </v-col>
       <div>
         <v-btn depressed color="primary">To</v-btn>
       </div>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" md="4" class="mt-8">
         <v-menu
           ref="menu2"
           v-model="menu2"
@@ -53,12 +54,13 @@
               readonly
               v-bind="attrs"
               v-on="on"
+              solo
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" no-title scrollable>
+          <v-date-picker v-model="end_date" no-title scrollable>
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu2 = false">Cancel</v-btn>
-            <v-btn text color="primary" @click="$refs.menu2.save(date)">OK</v-btn>
+            <v-btn text color="primary" @click="$refs.menu2.save(end_date)">OK</v-btn>
           </v-date-picker>
         </v-menu>
       </v-col>
