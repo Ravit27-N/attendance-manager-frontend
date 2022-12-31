@@ -30,4 +30,13 @@ exports.getAttendanceTotalDaily = async (req, res, next) => {
     next(error);
   }
 };
+exports.getAttendanceTotalMonthly = async (req, res, next) => {
+  let {start_date,end_date} = req.body;
+  try {
+    const [data, _] = await Chart.count_attendance_startdate_enddate_by_month(start_date,end_date);
+    res.status(200).json({ message:"success", data });
+  } catch (error) {
+    next(error);
+  }
+};
 

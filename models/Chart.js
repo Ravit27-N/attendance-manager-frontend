@@ -42,6 +42,18 @@ class Chart {
 
   }
 
+  static count_attendance_startdate_enddate_by_month(startDate,endDate) {
+    var currentTime = new Date();
+    const convertTime = moment(currentTime).format("YYYY-MM-DD");
+
+    let sql = `SELECT date(att.created) as category, COUNT(*) AS count
+    FROM attendances as att JOIN students AS stu on att.student_id = stu.student_id
+    where date(att.created) >= '${startDate}' AND date(att.created) <= '${endDate}'
+	 GROUP BY month(att.created), YEAR(att.created) ;`;
+    return db.execute(sql);
+
+  }
+
 
 
 }

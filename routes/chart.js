@@ -8,7 +8,6 @@ const auth = require("../config/auth");
 router.route("/today").get(chartcontroller.getdatatoday)
 router.route("/department").post(chartcontroller.getAttendanceEachDepartment)
 router.route("/daily").post(chartcontroller.getAttendanceTotalDaily)
-// router.route("/monthly").get(chartcontroller.getdatatoday)
-
+router.route("/monthly").post(chartcontroller.getAttendanceTotalMonthly)
 
 module.exports = router;

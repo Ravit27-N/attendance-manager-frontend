@@ -64,6 +64,16 @@ exports.getStudentById = async (req, res, next) => {
     next(error);
   }
 };
+exports.getStudentByStudentId = async (req, res, next) => {
+  try {
+    let {student_id} = req.body;
+    let [student, _] = await Student.findByStudentId(student_id);
+
+    res.status(200).json({ student: student[0] });
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.deleteStudentById = async (req, res, next) => {
   try {
@@ -76,6 +86,7 @@ exports.deleteStudentById = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.test = async (req, res, next) => {
   try {
 

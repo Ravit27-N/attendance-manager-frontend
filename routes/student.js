@@ -27,5 +27,6 @@ router.route("/:id")
       .get(studentController.getStudentById)
       .delete(studentController.deleteStudentById)
       .put(upload.single("image"),studentController.UpdateStudent);
+router.route("/studentid").post(studentController.getStudentByStudentId)
 
 module.exports = router;

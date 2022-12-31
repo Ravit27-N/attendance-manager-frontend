@@ -89,6 +89,11 @@ class Student {
     return db.execute(sql);
   }
 
+  static findByStudentId(id) {
+    let sql = `SELECT * FROM students WHERE student_id = '${id}';`;
+    return db.execute(sql);
+  }
+
 }
 
 module.exports = Student;
