@@ -22,7 +22,7 @@
             ></v-text-field>
             <v-spacer></v-spacer>
 
-            <v-dialog v-model="dialogcreate" max-width="600px">
+            <v-dialog v-model="dialogcreate" max-width="800px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   color="primary"
@@ -34,7 +34,7 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="text-h5">{{ formTitle }}</span>
+                  <span class="text-h5 header-dialog" >{{ formTitle }}</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -69,10 +69,21 @@
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6" class="input-data">
+                        <v-text-field
+                          v-model="submit_data.phone_number"
+                          label="Phone Number"
+                          placeholder="Enter name"
+                          outlined
+                          clearable
+                          required
+                        >Phone Number</v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="12" md="12" class="input-data">
                         <!-- <v-text-field v-model="submit_data.dob" label="dob" outlined></v-text-field> -->
                         <v-dialog
                           ref="dialog"
                           v-model="modal"
+                           label="gender"
                           :return-value.sync="date"
                           persistent
                           width="290px"
@@ -80,8 +91,8 @@
                           <template v-slot:activator="{ on, attrs }">
                             <v-text-field
                               v-model="submit_data.dob"
-                              label="Picker in dialog"
-                              prepend-icon="mdi-calendar"
+                              label="Picker Date of Birth"
+                              append-icon="mdi-calendar"
                               readonly
                               v-bind="attrs"
                               v-on="on"
@@ -95,43 +106,38 @@
                           </v-date-picker>
                         </v-dialog>
                       </v-col>
-                      <v-col cols="12" sm="6" md="12" class="input-data">
+                      <v-col cols="12" sm="6" md="4" class="input-data">
                         <v-select
-                          :items="province"
-                          label="province"
-                          v-model="submit_data.province"
+                          :items="usertype"
+                          label="usertype"
+                          v-model="submit_data.usertype"
                           outlined
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4" class="input-data">
-                        <v-text-field
+                        <v-select
+                          :items="department"
+                          label="Department"
                           v-model="submit_data.department"
-                          label="department"
-                          placeholder=" GIC"
                           outlined
-                        ></v-text-field>
+                        ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4" class="input-data">
-                        <v-text-field
+                        <v-select
+                          :items="years"
+                          label="Year Department"
                           v-model="submit_data.year_department"
-                          label="year_department"
-                          placeholder=" GIC5"
                           outlined
-                        ></v-text-field>
+                        ></v-select>
                       </v-col>
-                      <v-col cols="12" sm="6" md="4" class="input-data">
-                        <v-text-field
-                          v-model="submit_data.option"
-                          label="option"
-                          placeholder=" _GIC"
-                          outlined
-                        ></v-text-field>
-                      </v-col>
+                      
+                      
+    
                       <v-col cols="12" sm="12" md="12" class="input-data">
                         <v-file-input
                           accept="image/*"
-                          placeholder="Pick an avatar"
-                          prepend-icon="mdi-camera"
+                          placeholder="Pick an image"
+                          append-icon="mdi-camera"
                           label="Image"
                           type="file"
                           v-model="submit_data.image"
@@ -215,14 +221,7 @@
                           </v-date-picker>
                         </v-dialog>
                       </v-col>
-                      <v-col cols="12" sm="6" md="12" class="input-data">
-                        <v-select
-                          :items="province"
-                          label="province"
-                          v-model="submit_edit_data.province"
-                          outlined
-                        ></v-select>
-                      </v-col>
+                    
                       <v-col cols="12" sm="6" md="4" class="input-data">
                         <v-text-field
                           v-model="submit_edit_data.department"
@@ -324,7 +323,9 @@ export default {
     dialogUpdate: false,
     dialogDelete: false,
     gender: ["Male", "Female"],
-    province: ["Phnom Penh", "Preah Vihear"],
+    usertype: ["Ingénieure", "Technique", "Lecturer","Guest"],
+    department: ["DTC", "GIM", "GIC","GCI","GTR","GRU"],
+    years:["0","1","2","3","4","5"],
     headers: [
       {
         text: "Image",
@@ -352,9 +353,10 @@ export default {
       name: "",
       gender: "",
       dob: "",
-      province: "",
-      year_department: "",
+      phone_number:"",
+      usertype:"",
       department: "",
+      year_department: "0",
       option: "",
       image: ""
     },
@@ -363,9 +365,10 @@ export default {
       name: "",
       gender: "",
       dob: "",
-      province: "",
-      year_department: "",
+      phone_number:"",
+      user_type:"",
       department: "",
+      year_department: "",
       option: "",
       image: ""
     }
@@ -416,28 +419,41 @@ export default {
         });
     },
     create_students() {
-      const formData = new FormData();
-      formData.append("student_id", this.submit_data.student_id);
-      formData.append("name", this.submit_data.name);
-      formData.append("gender", this.submit_data.gender);
-      formData.append("dob", this.submit_data.dob);
-      formData.append("province", this.submit_data.province);
-      formData.append("year_department", this.submit_data.year_department);
-      formData.append("department", this.submit_data.department);
-      formData.append("option", this.submit_data.option);
-      formData.append("image", this.submit_data.image);
-      console.log(formData);
-      axios
-        .post(`http://localhost:3000/student`, formData)
-        .then(response => (this.info = response))
-        .then(() => {
-          if (this.info.statusText == "Created") {
-            this.dialogcreate = false;
-            this.get_students();
-          } else {
-            alert("Create Student Error");
-          }
-        });
+      // const formData = new FormData();
+
+      if(this.submit_data.usertype=="Ingénieure"){
+        this.submit_data.option= "I"+this.submit_data.year_department+"-"+this.submit_data.department;
+      }else if(this.submit_data.usertype=="Technique"){
+        this.submit_data.option= "T"+this.submit_data.year_department+"-"+this.submit_data.department;
+      }else if(this.submit_data.usertype=="Lecturer"){
+        this.submit_data.option = this.usertype;
+      }else{
+        this.submit_data.option = "Guest";
+      }
+      
+      console.log(this.submit_data);
+
+      // formData.append("student_id", this.submit_data.student_id);
+      // formData.append("name", this.submit_data.name);
+      // formData.append("gender", this.submit_data.gender);
+      // formData.append("dob", this.submit_data.dob);
+      // formData.append("province", this.submit_data.province);
+      // formData.append("year_department", this.submit_data.year_department);
+      // formData.append("department", this.submit_data.department);
+      // formData.append("option", this.submit_data.option);
+      // formData.append("image", this.submit_data.image);
+     
+      // axios
+      //   .post(`http://localhost:3000/student`, formData)
+      //   .then(response => (this.info = response))
+      //   .then(() => {
+      //     if (this.info.statusText == "Created") {
+      //       this.dialogcreate = false;
+      //       this.get_students();
+      //     } else {
+      //       alert("Create Student Error");
+      //     }
+      //   });
     },
     editItem(item) {
       // console.log(item);
@@ -500,5 +516,9 @@ export default {
 <style scoped>
 .input-data {
   padding: 0px 5px;
+}
+.header-dialog{
+  font-weight: 600;
+  color: #0062e0;;
 }
 </style>

@@ -25,12 +25,30 @@
       </div>
     </div>
     <v-spacer></v-spacer>
-    <v-btn tile color="error">
+    <v-btn tile color="error" @click="logout">
       Log out
       <v-icon right>mdi-logout</v-icon>
     </v-btn>
+
   </v-app-bar>
 </template>
+<script>
+export default {
+  data: () => ({
+   
+  }),
+  methods: {
+    logout() {
+    
+      setTimeout(() => {
+        sessionStorage.removeItem("Token");
+        this.$router.push({ name: "Login" });
+      }, 1000);
+
+    }
+  }
+};
+</script>
 <style scoped>
 .active {
   background-color: indianred;

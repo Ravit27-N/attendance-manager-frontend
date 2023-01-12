@@ -9,7 +9,7 @@
                 <img src="../assets/Stemlogo.png" width="75" height="75" alt />
               </a>
               <div class="space"></div>
-              <a href="/#">
+              <a href="/admin">
                 <img src="../assets/user-2.png" width="75" height="75" alt />
               </a>
             </div>
@@ -80,6 +80,7 @@ export default {
       // v => (v && v.length == 9) || "Student ID must be 9 characters"
     ],
     submit_data: { student_id: "" },
+    ishidden:true,
     lastfivestudent: []
   }),
   methods: {

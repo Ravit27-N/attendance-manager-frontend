@@ -29,6 +29,7 @@
                             solo
                             label="Enter your email"
                             name="Email"
+                            v-model="submit_data.email"
                             append-icon="mdi-email"
                             type="email"
                             required
@@ -38,6 +39,7 @@
                           <label for="Email">Password</label>
                           <v-text-field
                             solo
+                            v-model="submit_data.password"
                             label="Enter your password"
                             :type="show1 ? 'text' : 'password'"
                             outlined
@@ -45,12 +47,10 @@
                             @click:append="show1 = !show1"
                           ></v-text-field>
                           <a href class="text-left forgotlink">Forgot password?</a>
-                        
                         </div>
-                        
                       </v-card-text>
                       <div class="text-center mt-3">
-                        <v-btn rounded color="white" class="btn-login">Log In</v-btn>
+                        <v-btn rounded color="white" class="btn-login" @click="login">Log In</v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -61,23 +61,69 @@
         </v-row>
       </v-container>
     </v-content>
+
+    <div>
+      <v-snackbar
+      v-model="snackbar"
+      top
+      right
+      :color="snackbarColor"
+      timeout="2000"
+      rounded="pill"
+      height="20"
+    >
+      {{snackbarText}}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
+    </div>
   </v-app>
 </template>
  
   <script>
+
+import axios from "axios";
 export default {
   data: () => ({
     step: 1,
     show1: false,
+    submit_data: {
+      email: "hunravit2711@gmail.com",
+      password: "1111"
+    },
+    snackbarText:"",
+    snackbarColor:"",
+    snackbar: false
   }),
-  props: {
-    source: String
-  }
+  methods: {
+    login() {
+      console.log(this.submit_data);
+      axios
+        .post(`http://localhost:3000/user/login`, this.submit_data)
+        .then(response => (this.info = response))
+        .then(() => {
+          if (this.info) {
+            console.log(this.info);
+            sessionStorage.setItem("Token", this.info.data.token);
+            this.snackbarText = "Login Success";
+            this.snackbarColor="  ";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push({ name: "Admin" });
+            }, 2000);
+          }
+        });
+    }
+  },
+  props: {}
 };
 </script>
 <style scoped>
-.contain-image{
-  background-color: #F3F1F1;
+.contain-image {
+  background-color: #f3f1f1;
 }
 .title-image {
   margin-left: 1rem;
@@ -92,7 +138,7 @@ export default {
 }
 .contain-login img {
   width: 5vw;
-  margin-bottom: 0.3rem ;
+  margin-bottom: 0.3rem;
 }
 .btn-login {
   color: #0062e0;
@@ -111,23 +157,23 @@ export default {
   text-decoration: none;
   font-size: 1rem;
 }
-.form-input{
+.form-input {
   margin-top: 1rem;
   padding: 0px 1.5rem;
 }
-.form-input label{
+.form-input label {
   color: white;
   font-size: 1rem;
   margin: 0.3rem;
   font-size: 1.2rem;
 }
-.form-input .v-text-field{
+.form-input .v-text-field {
   font-size: 1.2rem;
 }
-.contain-input{
+.contain-input {
   display: flex;
 }
-.input-box{
-  width:150vw;
+.input-box {
+  width: 150vw;
 }
 </style>
