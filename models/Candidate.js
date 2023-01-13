@@ -1,13 +1,13 @@
 const db = require("../config/db");
 
-class Student {
+class Candidate {
 
-  constructor(student_id,name,gender,dob,province,year_department,department,option,imageurl) {
+  constructor(student_id,name,gender,dob,usertype,year_department,department,option,imageurl) {
     this.student_id = student_id;
     this.name = name;
     this.gender = gender;
     this.dob= dob;
-    this.province=province;
+    this.usertype=usertype;
     this.year_department = year_department;
     this.department = department;
     this.option=option;
@@ -16,12 +16,12 @@ class Student {
 
   save() {
     let sql = `
-    INSERT INTO students(
+    INSERT INTO candidates(
       student_id,
       name,
       gender,
       dob,
-      province,
+      usertype,
       year_department,
       department,
       option,
@@ -32,7 +32,7 @@ class Student {
       '${this.name}',
       '${this.gender}',
       '${this.dob}',
-      '${this.province}',
+      '${this.usertype}',
       '${this.year_department}',
       '${this.department}',
       '${this.option}',
@@ -45,56 +45,56 @@ class Student {
     let sql="";
     if(this.imageurl!=''){
       sql = `
-      UPDATE students 
+      UPDATE candidates 
       set student_id='${this.student_id}',
           name='${this.name}',
           gender='${this.gender}',
           dob='${this.dob}',
-          province='${this.province}',
+          usertype='${this.usertype}',
           year_department='${this.year_department}',
           department = '${this.department}',
           option='${this.option}',
           imageurl='${this.imageurl}'
-      where students.id = '${id}'
+      where candidates.id = '${id}'
       `;
     }else{
       sql = `
-      UPDATE students 
+      UPDATE candidates 
       set student_id='${this.student_id}',
           name='${this.name}',
           gender='${this.gender}',
           dob='${this.dob}',
-          province='${this.province}',
+          usertype='${this.usertype}',
           year_department='${this.year_department}',
           department = '${this.department}',
           option='${this.option}'
-      where students.id = '${id}'
+      where candidates.id = '${id}'
       `;
     }
     return db.execute(sql);
   }
 
   static DeletebyId(id) {
-    let sql = `Delete FROM students where id=${id};`;
+    let sql = `Delete FROM candidates where id=${id};`;
     return db.execute(sql);
   }
 
   static findAll() {
-    let sql = "SELECT * FROM students;";
+    let sql = "SELECT * FROM candidates;";
     return db.execute(sql);
   }
 
   static findById(id) {
-    let sql = `SELECT * FROM students WHERE id = ${id};`;
+    let sql = `SELECT * FROM candidates WHERE id = ${id};`;
     return db.execute(sql);
   }
 
   static findByStudentId(id) {
-    let sql = `SELECT * FROM students WHERE student_id = '${id}';`;
+    let sql = `SELECT * FROM candidates WHERE student_id = '${id}';`;
     return db.execute(sql);
   }
 
 }
 
-module.exports = Student;
+module.exports = Candidate;
 

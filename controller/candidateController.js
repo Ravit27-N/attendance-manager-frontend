@@ -1,10 +1,9 @@
-const Student = require("../models/student");
+const Candidate = require("../models/Candidate");
 
 exports.getAllstudent = async (req, res, next) => {
   try {
-    const [student, _] = await Student.findAll();
-
-    res.status(200).json({ count: student.length, student });
+    const [candidates, _] = await Candidate.findAll();
+    res.status(200).json({ count: candidates.length, candidates });
   } catch (error) {
     next(error);
   }
@@ -12,18 +11,18 @@ exports.getAllstudent = async (req, res, next) => {
 
 exports.createNewStudent = async (req, res, next) => {
   try {
-    let {student_id,name, gender,dob,province,year_department,department,option } = req.body;
+    let { student_id, name, gender, dob, usertype, year_department, department, option } = req.body;
 
-    console.log(req.body);
-  
-    if(req.file){
-      var baseUrl = "http://localhost:3000/uploads/"+req.file.filename;
-    }else{
+    // console.log(req.body);
+
+    if (req.file) {
+      var baseUrl = "http://localhost:3000/uploads/" + req.file.filename;
+    } else {
       var baseUrl = "";
     }
-    var imageurl=baseUrl;
-    let student = new Student(student_id,name,gender,dob,province,year_department,department,option,imageurl);
-   
+    var imageurl = baseUrl;
+    let student = new Candidate(student_id, name, gender, dob, usertype, year_department, department, option, imageurl);
+
     student = await student.save();
     res.status(201).json({ message: "Student created" });
   } catch (error) {
@@ -34,19 +33,20 @@ exports.createNewStudent = async (req, res, next) => {
 
 exports.UpdateStudent = async (req, res, next) => {
   try {
-    let {student_id,name, gender,dob,province,year_department,department,option } = req.body;
+    let { student_id, name, gender, dob, usertype, year_department, department, option } = req.body;
     var id = req.params.id;
-  
-    if(req.file){
-      var baseUrl = "http://localhost:3000/uploads/"+req.file.filename;
-    }else{
+
+    if (req.file) {
+      var baseUrl = "http://localhost:3000/uploads/" + req.file.filename;
+    } else {
       var baseUrl = "";
     }
-    var imageurl=baseUrl;
-    let student = new Student(student_id,name,gender,dob,province,year_department,department,option,imageurl);
-   
+    var imageurl = baseUrl;
+    let student = new Candidate(student_id, name, gender, dob, usertype, year_department, department, option, imageurl);
+
     student = await student.edit(id);
-    res.status(201).json({ message: "Student modified" });
+    res.status(201).json({ message: "Candidate modified" });
+
   } catch (error) {
     console.log("Error 2");
     next(error);
@@ -57,7 +57,7 @@ exports.getStudentById = async (req, res, next) => {
   try {
     let studentId = req.params.id;
 
-    let [student, _] = await Student.findById(studentId);
+    let [student, _] = await Candidate.findById(studentId);
 
     res.status(200).json({ student: student[0] });
   } catch (error) {
@@ -66,8 +66,8 @@ exports.getStudentById = async (req, res, next) => {
 };
 exports.getStudentByStudentId = async (req, res, next) => {
   try {
-    let {student_id} = req.body;
-    let [student, _] = await Student.findByStudentId(student_id);
+    let { student_id } = req.body;
+    let [student, _] = await Candidate.findByStudentId(student_id);
 
     res.status(200).json({ student: student[0] });
   } catch (error) {
@@ -79,7 +79,7 @@ exports.deleteStudentById = async (req, res, next) => {
   try {
     let id = req.params.id;
 
-    let student = await Student.DeletebyId(id);
+    let student = await Candidate.DeletebyId(id);
 
     res.status(200).json({ message: "Student deleted" });
   } catch (error) {
@@ -90,9 +90,9 @@ exports.deleteStudentById = async (req, res, next) => {
 exports.test = async (req, res, next) => {
   try {
 
-    if(req.file){
-      var baseUrl = "http://localhost:3000/uploads/"+req.file.filename;
-    }else{
+    if (req.file) {
+      var baseUrl = "http://localhost:3000/uploads/" + req.file.filename;
+    } else {
       var baseUrl = "";
     }
     console.log(req.file.filename);

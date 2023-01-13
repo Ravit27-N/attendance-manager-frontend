@@ -1,5 +1,5 @@
 const express = require("express");
-const studentController = require("../controller/studentController");
+const candidateController = require("../controller/candidateController");
 const router = express.Router();
 const auth = require("../config/auth");
 
@@ -20,13 +20,13 @@ const upload = multer({
 
 router
   .route("/")
-  .get(studentController.getAllstudent)
-  .post(upload.single("image"),studentController.createNewStudent);
-router.route("/test").post(upload.single("image"),studentController.test);
+  .get(candidateController.getAllstudent)
+  .post(upload.single("image"),candidateController.createNewStudent);
+router.route("/test").post(upload.single("image"),candidateController.test);
 router.route("/:id")
-      .get(studentController.getStudentById)
-      .delete(studentController.deleteStudentById)
-      .put(upload.single("image"),studentController.UpdateStudent);
-router.route("/studentid").post(studentController.getStudentByStudentId)
+      .get(candidateController.getStudentById)
+      .delete(candidateController.deleteStudentById)
+      .put(upload.single("image"),candidateController.UpdateStudent);
+router.route("/studentid").post(candidateController.getStudentByStudentId)
 
 module.exports = router;
