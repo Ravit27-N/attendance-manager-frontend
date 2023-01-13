@@ -9,8 +9,8 @@
                 <img src="../assets/Stemlogo.png" width="75" height="75" alt />
               </a>
               <div class="space"></div>
-              <a href="/admin">
-                <img src="../assets/user-2.png" width="75" height="75" alt />
+              <a href="/admin" class="mt-1">
+                <img src="../assets/user.png" width="70" height="70" alt />
               </a>
             </div>
             <div class="row2">
@@ -70,18 +70,39 @@
         </v-row>
       </v-container>
     </v-content>
+    <div>
+      <v-snackbar
+        v-model="snackbar"
+        top
+        center
+        :color="snackbarColor"
+        timeout="2000"
+        rounded="pill"
+        height="20"
+      >
+        {{snackbarText}}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
   </v-app>
 </template>
 <script>
 import axios from "axios";
+import AttendanceService from "../services/AttendanceService";
 export default {
   data: () => ({
     studentIdRules: [
       // v => (v && v.length == 9) || "Student ID must be 9 characters"
     ],
     submit_data: { student_id: "" },
-    ishidden:true,
-    lastfivestudent: []
+    ishidden: true,
+    lastfivestudent: [],
+    snackbarText: "",
+    snackbarColor: "green"
   }),
   methods: {
     animationwelcome() {
@@ -90,24 +111,22 @@ export default {
       }, 2000);
     },
     get_lastfive_attendance() {
-      axios
-        .get(`http://localhost:3000/attendance/lastfive`)
-        .then(response => (this.info = response))
-        .then(() => {
-          if (this.info) {
-            let i = 0;
-            // console.log(this.info.data.attendance);
-            this.lastfivestudent = this.info.data.attendance;
-            for (i in this.lastfivestudent) {
-              if (this.lastfivestudent[i].imageurl == null) {
-                this.lastfivestudent[i].imageurl =
-                  "http://localhost:3000/uploads/guest.jpg";
-              }
-              if (this.lastfivestudent[i].name == null) {
-                this.lastfivestudent[i].name = "Guest";
-              }
+      AttendanceService.getLastAttendance()
+        .then(response => {
+          let i = 0;
+          this.lastfivestudent = response.data.attendance;
+          for (i in this.lastfivestudent) {
+            if (this.lastfivestudent[i].imageurl == null) {
+              this.lastfivestudent[i].imageurl =
+                "http://localhost:3000/uploads/guest.jpg";
+            }
+            if (this.lastfivestudent[i].name == null) {
+              this.lastfivestudent[i].name = "Guest";
             }
           }
+        })
+        .catch(e => {
+          console.log(e);
         });
     },
     submit_from() {
@@ -118,16 +137,19 @@ export default {
       }
     },
     upload_attendance() {
-      axios
-        .post(`http://localhost:3000/attendance`, this.submit_data)
-        .then(response => (this.info = response))
-        .then(() => {
-          if (this.info.statusText == "Created") {
+    
+      AttendanceService.create(this.submit_data)
+        .then(response => {
+          if (response) {
             this.get_lastfive_attendance();
             this.$refs.form.reset();
-          } else {
-            alert("Cannot submit");
+            this.snackbarColor = "green";
+            this.snackbarText = "Register Success";
+            this.snackbar = true;
           }
+        })
+        .catch(e => {
+          console.log(e);
         });
     },
     get_student_by_id() {
@@ -139,7 +161,10 @@ export default {
             // console.log(this.info.data);
 
             if (this.info.data.student == null) {
-              alert("Please register before join library");
+              this.$refs.form.reset();
+              this.snackbarColor = "red";
+              this.snackbarText = "Please register before join library";
+              this.snackbar = true;
             } else {
               this.upload_attendance();
             }

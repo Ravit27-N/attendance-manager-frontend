@@ -29,7 +29,7 @@
           <v-date-picker v-model="start_date" no-title scrollable>
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(end_date)">OK</v-btn>
+            <v-btn text color="primary" @click="$refs.menu.save(start_date)">OK</v-btn>
           </v-date-picker>
         </v-menu>
       </v-col>
@@ -70,7 +70,10 @@
         Get Data
         <v-icon right dark>mdi-share</v-icon>
       </v-btn>
-      <v-btn depressed color="primary" @click="exportexcel">Export Excel <v-icon right dark>mdi-file-download</v-icon></v-btn>
+      <v-btn depressed color="primary" @click="exportexcel">
+        Export Excel
+        <v-icon right dark>mdi-file-download</v-icon>
+      </v-btn>
     </div>
     <div class="row3 mx-10 my-10">
       <v-card>
@@ -96,6 +99,7 @@
 </template>
 <script>
 import axios from "axios";
+import { excelParser } from "../plugins/excel-parser";
 import moment from "moment";
 export default {
   data: () => ({
@@ -131,7 +135,6 @@ export default {
   },
   mounted() {
     this.settoday();
-    this.getattendance();
   },
   methods: {
     settoday: function() {
@@ -142,32 +145,44 @@ export default {
       this.end_date = convertTime;
     },
     getattendance() {
-      var submit_data = {
-        start_date: this.start_date,
-        end_date: this.end_date
-      };
-      axios
-        .post(`http://localhost:3000/report`, submit_data)
-        .then(response => (this.info = response))
-        .then(() => {
-          if (this.info) {
-            // console.log(this.info.data);
-            this.students = this.info.data.data;
-            console.log(this.students.created);
-            let i = 0;
-            for (i in this.students) {
-              this.students[i].created = moment(
-                this.students[i].created
-              ).format("DD/MM/YYYY h:mm a");
-            }
-          }
-        });
+      if (this.start_date < this.end_date) {
+        var submit_data = {
+          start_date: this.start_date,
+          end_date: this.end_date
+        };
+        try {
+          axios
+            .post(`http://localhost:3000/report`, submit_data)
+            .then(response => (this.info = response))
+            .then(() => {
+              if (this.info) {
+                // console.log(this.info.data);
+                this.students = this.info.data.data;
+                console.log(this.students.created);
+                let i = 0;
+                for (i in this.students) {
+                  this.students[i].created = moment(
+                    this.students[i].created
+                  ).format("DD/MM/YYYY h:mm a");
+                }
+              }
+            });
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        alert("Start date cannot be greater than end date");
+      }
     },
     getdata() {
       this.getattendance();
     },
     exportexcel() {
-      alert("Export data");
+      if (this.students.length != 0) {
+        excelParser().exportDataFromJSON(this.students, null, null);
+      }else{
+         alert("Please get data first");
+      }
     }
   }
 };

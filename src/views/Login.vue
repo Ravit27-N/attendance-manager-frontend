@@ -100,6 +100,7 @@ export default {
   }),
   methods: {
     login() {
+      
       console.log(this.submit_data);
       axios
         .post(`http://localhost:3000/user/login`, this.submit_data)
@@ -109,12 +110,14 @@ export default {
             console.log(this.info);
             sessionStorage.setItem("Token", this.info.data.token);
             this.snackbarText = "Login Success";
-            this.snackbarColor="  ";
+            this.snackbarColor="green";
             this.snackbar = true;
             setTimeout(() => {
               this.$router.push({ name: "Admin" });
             }, 2000);
           }
+        }).catch(e => {
+          console.log(e);
         });
     }
   },

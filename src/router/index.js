@@ -58,7 +58,7 @@ const routes = [
     component: () => import('../views/Student.vue'),
     meta: {
       header: 1,
-      auth: false
+      auth: true
     }
   },
   {

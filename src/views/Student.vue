@@ -34,119 +34,126 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="text-h5 header-dialog" >{{ formTitle }}</span>
+                  <span class="text-h5 header-dialog">{{ formTitle }}</span>
                 </v-card-title>
 
                 <v-card-text>
-                  <v-container>
-                    <v-row class="mt-2">
-                      <v-col cols="12" sm="6" md="6" class="input-data">
-                        <v-text-field
-                          v-model="submit_data.student_id"
-                          label="Id"
-                          placeholder="Enter id"
-                          outlined
-                          clearable
-                          required
-                        >Id</v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6" class="input-data">
-                        <v-text-field
-                          v-model="submit_data.name"
-                          label="Name"
-                          placeholder="Enter name"
-                          outlined
-                          clearable
-                          required
-                        >Name</v-text-field>
-                      </v-col>
-                      <v-col class="d-flex input-data" cols="12" sm="6">
-                        <v-select
-                          :items="gender"
-                          v-model="submit_data.gender"
-                          label="gender"
-                          outlined
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6" class="input-data">
-                        <v-text-field
-                          v-model="submit_data.phone_number"
-                          label="Phone Number"
-                          placeholder="Enter name"
-                          outlined
-                          clearable
-                          required
-                        >Phone Number</v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="12" md="12" class="input-data">
-                        <!-- <v-text-field v-model="submit_data.dob" label="dob" outlined></v-text-field> -->
-                        <v-dialog
-                          ref="dialog"
-                          v-model="modal"
-                           label="gender"
-                          :return-value.sync="date"
-                          persistent
-                          width="290px"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              v-model="submit_data.dob"
-                              label="Picker Date of Birth"
-                              append-icon="mdi-calendar"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                              outlined
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker v-model="submit_data.dob" scrollable>
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-                          </v-date-picker>
-                        </v-dialog>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4" class="input-data">
-                        <v-select
-                          :items="usertype"
-                          label="usertype"
-                          v-model="submit_data.usertype"
-                          outlined
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4" class="input-data">
-                        <v-select
-                          :items="department"
-                          label="Department"
-                          v-model="submit_data.department"
-                          outlined
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4" class="input-data">
-                        <v-select
-                          :items="years"
-                          label="Year Department"
-                          v-model="submit_data.year_department"
-                          outlined
-                        ></v-select>
-                      </v-col>
-                      
-                      
-    
-                      <v-col cols="12" sm="12" md="12" class="input-data">
-                        <v-file-input
-                          accept="image/*"
-                          placeholder="Pick an image"
-                          append-icon="mdi-camera"
-                          label="Image"
-                          type="file"
-                          v-model="submit_data.image"
-                          show-size
-                          outlined
-                        ></v-file-input>
-                      </v-col>
-                    </v-row>
-                  </v-container>
+                  <v-form ref="form" v-model="valid" lazy-validation>
+                    <v-container>
+                      <v-row class="mt-2">
+                        <v-col cols="12" sm="6" md="6" class="input-data">
+                          <v-text-field
+                            v-model="submit_data.student_id"
+                            label="Student Id"
+                            :rules="student_idrule"
+                            placeholder="Enter Student Id"
+                            outlined
+                            clearable
+                            required
+                          >Id</v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="6" class="input-data">
+                          <v-text-field
+                            v-model="submit_data.name"
+                            label="Name"
+                            :rules="nameRules"
+                            placeholder="Enter name"
+                            outlined
+                            clearable
+                            required
+                          >Name</v-text-field>
+                        </v-col>
+                        <v-col class="d-flex input-data" cols="12" sm="6">
+                          <v-select
+                            :rules="genderrule"
+                            :items="gender"
+                            v-model="submit_data.gender"
+                            label="gender"
+                            outlined
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="6" class="input-data">
+                          <v-text-field
+                            v-model="submit_data.phone_number"
+                            label="Phone Number"
+                            :rules="phone_numberrule"
+                            placeholder="Enter name"
+                            outlined
+                            clearable
+                            required
+                          >Phone Number</v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="12" md="12" class="input-data">
+                          <!-- <v-text-field v-model="submit_data.dob" label="dob" outlined></v-text-field> -->
+                          <v-dialog
+                            ref="dialog"
+                            v-model="modal"
+                            label="gender"
+                            :return-value.sync="date"
+                            persistent
+                            width="290px"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-text-field
+                                v-model="submit_data.dob"
+                                label="Date of Birth"
+                                append-icon="mdi-calendar"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                                outlined
+                              ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="submit_data.dob" scrollable>
+                              <v-spacer></v-spacer>
+                              <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                              <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+                            </v-date-picker>
+                          </v-dialog>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4" class="input-data">
+                          <v-select
+                            :items="usertype"
+                            label="usertype"
+                            v-on:change="listenUsertype"
+                            v-model="submit_data.usertype"
+                            outlined
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4" class="input-data">
+                          <v-select
+                            :disabled="!student_status"
+                            :items="department"
+                            label="Department"
+                            v-model="submit_data.department"
+                            outlined
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4" class="input-data">
+                          <v-select
+                            :items="years"
+                            :disabled="!student_status"
+                            label="Year Department"
+                            v-model="submit_data.year_department"
+                            outlined
+                          ></v-select>
+                        </v-col>
+
+                        <v-col cols="12" sm="12" md="12" class="input-data">
+                          <v-file-input
+                            accept="image/*"
+                            placeholder="Pick an image"
+                            append-icon="mdi-camera"
+                            label="Image"
+                            type="file"
+                            v-model="submit_data.image"
+                            show-size
+                            outlined
+                          ></v-file-input>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-form>
                 </v-card-text>
 
                 <v-card-actions>
@@ -221,7 +228,7 @@
                           </v-date-picker>
                         </v-dialog>
                       </v-col>
-                    
+
                       <v-col cols="12" sm="6" md="4" class="input-data">
                         <v-text-field
                           v-model="submit_edit_data.department"
@@ -312,7 +319,7 @@
 <script>
 import axios from "axios";
 import moment from "moment";
-
+import CandidateService from "../services/CandidateService";
 export default {
   data: () => ({
     search: "",
@@ -323,9 +330,9 @@ export default {
     dialogUpdate: false,
     dialogDelete: false,
     gender: ["Male", "Female"],
-    usertype: ["Ingénieure", "Technique", "Lecturer","Guest"],
-    department: ["DTC", "GIM", "GIC","GCI","GTR","GRU"],
-    years:["0","1","2","3","4","5"],
+    usertype: ["Ingénieure", "Technique", "Lecturer", "Guest"],
+    department: ["None", "DTC", "GIM", "GIC", "GCI", "GTR", "GRU"],
+    years: ["0", "1", "2", "3", "4", "5"],
     headers: [
       {
         text: "Image",
@@ -342,20 +349,31 @@ export default {
       { text: "name", value: "name" },
       { text: "Gender", value: "gender" },
       { text: "dob", value: "dob" },
-      { text: "province", value: "province" },
-      { text: "year_dept", value: "year_department" },
+      { text: "UserType", value: "usertype" },
+      { text: "Option", value: "option" },
       { text: "Actions", value: "actions", sortable: false }
     ],
+    student_status: true,
     students: [],
     editedIndex: -1,
+    nameRules: [
+      v => !!v || "Name is required",
+      v => (v && v.length <= 50) || "Name must be less than 50 characters"
+    ],
+    valid: false,
+    student_idrule: [v => !!v || "Student ID is required"],
+    genderrule: [v => !!v || "Gender is required"],
+    dobrule: [v => !!v || "Date of Birth is required"],
+    phone_numberrule: [v => !!v || "Phonenumber is required"],
+    usertyperule: [v => !!v || "User Type is required"],
     submit_data: {
       student_id: "",
       name: "",
-      gender: "",
+      gender: "Male",
       dob: "",
-      phone_number:"",
-      usertype:"",
-      department: "",
+      phone_number: "",
+      usertype: "Ingénieure",
+      department: "None",
       year_department: "0",
       option: "",
       image: ""
@@ -365,8 +383,8 @@ export default {
       name: "",
       gender: "",
       dob: "",
-      phone_number:"",
-      user_type:"",
+      phone_number: "",
+      user_type: "",
       department: "",
       year_department: "",
       option: "",
@@ -400,60 +418,84 @@ export default {
       return moment(date).format("YYYY-MM-DD");
     },
     get_students() {
-      axios
-        .get(`http://localhost:3000/student`)
-        .then(response => (this.info = response))
-        .then(() => {
-          if (this.info) {
-            let i = 0;
-            console.log(this.info.data);
-            this.students = this.info.data.student;
-            for (i in this.students) {
-              this.students[i].dob = this.moment(this.students[i].dob);
-              if (this.students[i].imageurl == null) {
-                this.lastfivestudent[i].imageurl =
-                  "http://localhost:3000/uploads/guest.jpg";
-              }
+      CandidateService.getAll()
+        .then(response => {
+          console.log(response);
+          let i = 0;
+          this.students = response.data.candidates;
+          for (i in this.students) {
+            this.students[i].dob = this.moment(this.students[i].dob);
+            if (this.students[i].imageurl == null) {
+              this.lastfivestudent[i].imageurl =
+                "http://localhost:3000/uploads/guest.jpg";
             }
           }
+        })
+        .catch(e => {
+          console.log(e);
         });
     },
-    create_students() {
-      // const formData = new FormData();
-
-      if(this.submit_data.usertype=="Ingénieure"){
-        this.submit_data.option= "I"+this.submit_data.year_department+"-"+this.submit_data.department;
-      }else if(this.submit_data.usertype=="Technique"){
-        this.submit_data.option= "T"+this.submit_data.year_department+"-"+this.submit_data.department;
-      }else if(this.submit_data.usertype=="Lecturer"){
+    listenUsertype() {
+      if (
+        this.submit_data.usertype != "Ingénieure" &&
+        this.submit_data.usertype != "Technique"
+      ) {
+        this.student_status = false;
+        this.submit_data.department = "None";
+        this.submit_data.year_department = "0";
+      } else {
+        this.student_status = true;
+      }
+    },
+    async create_students() {
+      if (this.submit_data.usertype == "Ingénieure") {
+        this.submit_data.option =
+          "I" +
+          this.submit_data.year_department +
+          "-" +
+          this.submit_data.department;
+      } else if (this.submit_data.usertype == "Technique") {
+        this.submit_data.option =
+          "T" +
+          this.submit_data.year_department +
+          "-" +
+          this.submit_data.department;
+      } else if (this.submit_data.usertype == "Lecturer") {
         this.submit_data.option = this.usertype;
-      }else{
+      } else {
         this.submit_data.option = "Guest";
       }
-      
-      console.log(this.submit_data);
 
-      // formData.append("student_id", this.submit_data.student_id);
-      // formData.append("name", this.submit_data.name);
-      // formData.append("gender", this.submit_data.gender);
-      // formData.append("dob", this.submit_data.dob);
-      // formData.append("province", this.submit_data.province);
-      // formData.append("year_department", this.submit_data.year_department);
-      // formData.append("department", this.submit_data.department);
-      // formData.append("option", this.submit_data.option);
-      // formData.append("image", this.submit_data.image);
-     
-      // axios
-      //   .post(`http://localhost:3000/student`, formData)
-      //   .then(response => (this.info = response))
-      //   .then(() => {
-      //     if (this.info.statusText == "Created") {
-      //       this.dialogcreate = false;
-      //       this.get_students();
-      //     } else {
-      //       alert("Create Student Error");
-      //     }
-      //   });
+      await this.validate();
+
+      if (this.valid==true) {
+        const formData = new FormData();
+        formData.append("student_id", this.submit_data.student_id);
+        formData.append("name", this.submit_data.name);
+        formData.append("gender", this.submit_data.gender);
+        formData.append("dob", this.submit_data.dob);
+        formData.append("province", this.submit_data.province);
+        formData.append("year_department", this.submit_data.year_department);
+        formData.append("department", this.submit_data.department);
+        formData.append("option", this.submit_data.option);
+        formData.append("image", this.submit_data.image);
+        axios
+          .post(`http://localhost:3000/candidate`, formData)
+          .then(response => (this.info = response))
+          .then(() => {
+            if (this.info.statusText == "Created") {
+              this.dialogcreate = false;
+              this.get_students();
+            } else {
+              alert("Create Student Error");
+            }
+          });
+      }else{
+        this.dialogcreate = true;
+      }
+    },
+    validate() {
+      this.$refs.form.validate();
     },
     editItem(item) {
       // console.log(item);
@@ -495,7 +537,7 @@ export default {
     deleteItemConfirm() {
       if (this.delete_id != null) {
         axios
-          .delete(`http://localhost:3000/student/${this.delete_id}`)
+          .delete(`http://localhost:3000/candidate/${this.delete_id}`)
           .then(response => (this.info = response))
           .then(() => {
             if (this.info) {
@@ -517,8 +559,8 @@ export default {
 .input-data {
   padding: 0px 5px;
 }
-.header-dialog{
+.header-dialog {
   font-weight: 600;
-  color: #0062e0;;
+  color: #0062e0;
 }
 </style>
