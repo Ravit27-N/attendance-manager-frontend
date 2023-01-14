@@ -44,7 +44,11 @@ export default {
         sessionStorage.removeItem("Token");
         this.$router.push({ name: "Login" });
       }, 1000);
+      
 
+    },
+    active(){
+      
     }
   }
 };

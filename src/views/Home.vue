@@ -137,7 +137,7 @@ export default {
       }
     },
     upload_attendance() {
-    
+      
       AttendanceService.create(this.submit_data)
         .then(response => {
           if (response) {
@@ -154,7 +154,7 @@ export default {
     },
     get_student_by_id() {
       axios
-        .post(`http://localhost:3000/student/studentid`, this.submit_data)
+        .post(`http://localhost:3000/candidate/studentid`, this.submit_data)
         .then(response => (this.info = response))
         .then(() => {
           if (this.info) {

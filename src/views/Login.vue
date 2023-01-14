@@ -64,27 +64,26 @@
 
     <div>
       <v-snackbar
-      v-model="snackbar"
-      top
-      right
-      :color="snackbarColor"
-      timeout="2000"
-      rounded="pill"
-      height="20"
-    >
-      {{snackbarText}}
-      <template v-slot:action="{ attrs }">
-        <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
-          <v-icon>close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
+        v-model="snackbar"
+        top
+        right
+        :color="snackbarColor"
+        timeout="2000"
+        rounded="pill"
+        height="20"
+      >
+        {{snackbarText}}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
     </div>
   </v-app>
 </template>
  
   <script>
-
 import axios from "axios";
 export default {
   data: () => ({
@@ -94,31 +93,32 @@ export default {
       email: "hunravit2711@gmail.com",
       password: "1111"
     },
-    snackbarText:"",
-    snackbarColor:"",
+    snackbarText: "",
+    snackbarColor: "",
     snackbar: false
   }),
   methods: {
     login() {
+      alert("Login");
       
-      console.log(this.submit_data);
-      axios
-        .post(`http://localhost:3000/user/login`, this.submit_data)
-        .then(response => (this.info = response))
-        .then(() => {
-          if (this.info) {
-            console.log(this.info);
-            sessionStorage.setItem("Token", this.info.data.token);
-            this.snackbarText = "Login Success";
-            this.snackbarColor="green";
-            this.snackbar = true;
-            setTimeout(() => {
-              this.$router.push({ name: "Admin" });
-            }, 2000);
-          }
-        }).catch(e => {
-          console.log(e);
-        });
+        axios
+          .post(`http://localhost:3000/user/login`, this.submit_data)
+          .then(response => (this.info = response))
+          .then(() => {
+    
+         
+              sessionStorage.setItem("Token", this.info.data.token);
+              this.snackbarText = "Login Success";
+              this.snackbarColor = "green";
+              this.snackbar = true;
+              setTimeout(() => {
+                this.$router.push({ name: "Admin" });
+              }, 2000);
+
+          })
+          .catch(e => {
+            console.log(e);
+          });
     }
   },
   props: {}

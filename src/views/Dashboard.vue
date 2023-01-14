@@ -8,7 +8,15 @@
           <DashCard title="Month" number="3005" picture_name="month-icon.png" />
           <DashCard title="Year" number="1120" picture_name="year-icon.png" />
         </div>
-        <div class="row2 barchart-group mx-10 mt-10">
+        <div class="d-flex mx-10 mt-10">
+          <v-col class="d-flex " cols="12" sm="2">
+            Select chart theme here:
+          </v-col>
+          <v-col class="d-flex" cols="12" sm="2">
+            <v-select :items="items" label="Outlined style" v-model="themechart" solo @change="updateTheme"></v-select>
+          </v-col>
+        </div>
+        <div class="row2 barchart-group">
           <apexchart
             height="300px"
             class="barchart"
@@ -61,12 +69,27 @@ export default {
     DashCard
   },
   data: () => ({
+    themechart:"palette1",
+    items:["palette1","palette2","palette3","palette4","palette5","palette6","palette7","palette8","palette9"],
     testKey: 1,
     options_bar: {
       chart: {
         id: "barchart-month",
+        animations: {
+          speed: 200
+        },
         type: "bar",
         events: {}
+      },
+      theme: {
+        mode: "light",
+        palette: "palette1",
+        monochrome: {
+          enabled: false,
+          color: "#255aee",
+          shadeTo: "light",
+          shadeIntensity: 0.65
+        }
       },
       title: {
         text: "Daily Attendance",
@@ -75,11 +98,15 @@ export default {
           fontSize: "20px"
         }
       },
+      plotOptions: {
+        bar: {
+          distributed: true
+        }
+      },
       xaxis: {
-        categories: [],
+        categories: ["GIM", "GIC", "Test"],
         labels: {
           style: {
-            colors: ["#F44336", "#C9F400", "#9C27B0"],
             fontSize: "1rem"
           }
         }
@@ -88,7 +115,7 @@ export default {
     series_bar: [
       {
         name: "Student",
-        data: []
+        data: [5, 8, 9]
       }
     ],
     series_pei: [],
@@ -96,6 +123,16 @@ export default {
       chart: {
         width: 380,
         type: "pie"
+      },
+      theme: {
+        mode: "light",
+        palette: "palette1",
+        monochrome: {
+          enabled: false,
+          color: "#255aee",
+          shadeTo: "light",
+          shadeIntensity: 0.65
+        }
       },
       title: {
         text: "Daily Attendance",
@@ -175,6 +212,18 @@ export default {
     this.getdailyattendance();
   },
   methods: {
+    updateTheme() {
+      this.options_bar = {
+        theme: {
+          palette: this.themechart
+        }
+      };
+      this.options_pei = {
+        theme: {
+          palette: this.themechart
+        }
+      };
+    },
     moment: function(date) {
       return moment(date).format("DD/MM/YYYY h:mm a");
     },
@@ -210,7 +259,6 @@ export default {
                 data[i] = getdata[i].count;
               }
             }
-
             this.options_bar.xaxis.categories = categories;
             this.series_bar[0].data = data;
 
