@@ -2,10 +2,11 @@ const db = require("../config/db");
 
 class Candidate {
 
-  constructor(student_id,name,gender,dob,usertype,year_department,department,option,imageurl) {
+  constructor(student_id,name,gender,phone_number,dob,usertype,year_department,department,option,imageurl) {
     this.student_id = student_id;
     this.name = name;
     this.gender = gender;
+    this.phone_number = phone_number;
     this.dob= dob;
     this.usertype=usertype;
     this.year_department = year_department;
@@ -20,6 +21,7 @@ class Candidate {
       student_id,
       name,
       gender,
+      phone_number,
       dob,
       usertype,
       year_department,
@@ -31,6 +33,7 @@ class Candidate {
       '${this.student_id}',
       '${this.name}',
       '${this.gender}',
+      '${this.phone_number}',
       '${this.dob}',
       '${this.usertype}',
       '${this.year_department}',
@@ -50,6 +53,7 @@ class Candidate {
           name='${this.name}',
           gender='${this.gender}',
           dob='${this.dob}',
+          phone_number='${this.phone_number}',
           usertype='${this.usertype}',
           year_department='${this.year_department}',
           department = '${this.department}',
@@ -63,6 +67,7 @@ class Candidate {
       set student_id='${this.student_id}',
           name='${this.name}',
           gender='${this.gender}',
+          phone_number='${this.phone_number}',
           dob='${this.dob}',
           usertype='${this.usertype}',
           year_department='${this.year_department}',

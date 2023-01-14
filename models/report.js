@@ -11,7 +11,7 @@ class Report {
 
     let sql = `SELECT stu.year_department as category, COUNT(year_department) AS count
                 FROM attendances AS att
-                JOIN students AS stu ON stu.student_id = att.student_id
+                JOIN candidates AS stu ON stu.student_id = att.student_id
                 WHERE date(att.created) = '${convertTime}'
                 GROUP BY stu.year_department;`;
     return db.execute(sql);
@@ -20,7 +20,7 @@ class Report {
 
   static findByStartDateAndEndDate(startDate,endDate) {
     let sql = `SELECT stu.* , att.created
-    FROM attendances as att JOIN students AS stu on att.student_id = stu.student_id
+    FROM attendances as att JOIN candidates AS stu on att.student_id = stu.student_id
     where date(att.created) >= '${startDate}' AND date(att.created) <= '${endDate}' ;`;
     return db.execute(sql);
   }

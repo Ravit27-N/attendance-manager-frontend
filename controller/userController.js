@@ -65,14 +65,16 @@ exports.UpdateStudent = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+   //if error login check database password set text not varchar
     if (!(email && password)) {
       res.status(400).send("All input is required");
     }
     var username = email;
    
     let [user, _] = await User.findByUsernameOrEmail(username, email);
+  
     const comparepassword = await bcrypt.compare(password,user[0].password);
-    
     if (user.length > 0 && comparepassword) {
       // Create token
       const token = jwt.sign(

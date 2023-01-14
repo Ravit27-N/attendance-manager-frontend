@@ -11,7 +11,7 @@ exports.getAllstudent = async (req, res, next) => {
 
 exports.createNewStudent = async (req, res, next) => {
   try {
-    let { student_id, name, gender, dob, usertype, year_department, department, option } = req.body;
+    let { student_id, name, gender,phone_number, dob, usertype, year_department, department, option } = req.body;
 
     // console.log(req.body);
 
@@ -21,7 +21,7 @@ exports.createNewStudent = async (req, res, next) => {
       var baseUrl = "";
     }
     var imageurl = baseUrl;
-    let student = new Candidate(student_id, name, gender, dob, usertype, year_department, department, option, imageurl);
+    let student = new Candidate(student_id, name, gender,phone_number, dob, usertype, year_department, department, option, imageurl);
 
     student = await student.save();
     res.status(201).json({ message: "Student created" });
@@ -33,7 +33,7 @@ exports.createNewStudent = async (req, res, next) => {
 
 exports.UpdateStudent = async (req, res, next) => {
   try {
-    let { student_id, name, gender, dob, usertype, year_department, department, option } = req.body;
+    let { student_id, name, gender,phone_number, dob, usertype, year_department, department, option } = req.body;
     var id = req.params.id;
 
     if (req.file) {
@@ -42,7 +42,7 @@ exports.UpdateStudent = async (req, res, next) => {
       var baseUrl = "";
     }
     var imageurl = baseUrl;
-    let student = new Candidate(student_id, name, gender, dob, usertype, year_department, department, option, imageurl);
+    let student = new Candidate(student_id, name, gender,phone_number, dob, usertype, year_department, department, option, imageurl);
 
     student = await student.edit(id);
     res.status(201).json({ message: "Candidate modified" });

@@ -27,16 +27,16 @@ class Attendance {
   }
   static findAll() {
     let sql = `SELECT att.*, 
-    stu.name, 
-    stu.option, 
-    stu.gender, 
-    stu.imageurl 
-    FROM attendances as att LEFT JOIN students AS stu on att.student_id = stu.student_id;`;
+    can.name, 
+    can.option, 
+    can.gender, 
+    can.imageurl 
+    FROM attendances as att LEFT JOIN candidates AS can on att.student_id = can.student_id;`;
     return db.execute(sql);
   }
   static findlastfives() { 
-    let sql = `SELECT att.*, stu.name, stu.imageurl FROM 
-    attendances as att LEFT JOIN students AS stu on att.student_id = stu.student_id
+    let sql = `SELECT att.*, can.name, can.imageurl FROM 
+    attendances as att LEFT JOIN candidates AS can on att.student_id = can.student_id
     order by id desc limit 5;
     `;
     return db.execute(sql);
