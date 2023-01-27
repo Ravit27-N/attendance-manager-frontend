@@ -308,9 +308,59 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
+
+            <v-dialog v-model="dialogView" max-width="600px">
+              <v-card class="pa-5">
+                <v-list-item three-line>
+                  <v-list-item-avatar tile size="200px">
+                    <v-img :src="viewData.imageurl" width="200px"></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <div class="text-overline mb-4">Candidate information</div>
+
+                    <v-list-item-title class="name">
+                      {{viewData.name}}
+                      <br />
+                      <span class="usertype">{{viewData.usertype}}</span>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                  <br />
+                  <v-avatar size="100">
+                    <img src="@/assets/logoitc.png" alt="logoitc" />
+                  </v-avatar>
+                </v-list-item>
+                <v-list-item-content></v-list-item-content>
+                <div class="coninfo">
+                  <v-chip class="ma-2 information" color="primary" label>
+                    <v-icon left>mdi-account</v-icon>
+                    {{viewData.student_id}}
+                  </v-chip>
+                  <v-chip class="ma-2 information" color="primary" label>
+                    <v-icon left>mdi-phone</v-icon>
+                    {{viewData.phone_number}}
+                  </v-chip>
+                  <v-chip class="ma-2 information" color="primary" label>
+                    <v-icon left>mdi-information</v-icon>
+                    {{viewData.option}}
+                  </v-chip>
+                </div>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red darken-1" text @click="dialogView = false">Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
+          <v-icon
+            medium
+            color="primary"
+            class="mr-2"
+            @click="viewItem(item)"
+            @click.stop="dialogView = true"
+          >mdi-eye</v-icon>
           <v-icon
             medium
             color="primary"
@@ -334,6 +384,24 @@
         </template>
       </v-data-table>
     </v-col>
+    <div>
+      <v-snackbar
+        v-model="snackbar"
+        top
+        right
+        :color="snackbarColor"
+        timeout="2000"
+        rounded="pill"
+        height="20"
+      >
+        {{snackbarText}}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
   </div>
 </template>
 <script>
@@ -343,12 +411,16 @@ import CandidateService from "../services/CandidateService";
 export default {
   data: () => ({
     search: "",
+    snackbarText: "",
+    snackbarColor: "",
+    snackbar: false,
     modal: false,
     delete_id: null,
     dialog: false,
     dialogcreate: false,
     dialogUpdate: false,
     dialogDelete: false,
+    dialogView: false,
     gender: ["Male", "Female"],
     usertype: ["Ingénieure", "Technique", "Lecturer", "Guest"],
     department: ["None", "DTC", "GIM", "GIC", "GCI", "GTR", "GRU"],
@@ -412,7 +484,8 @@ export default {
       year_department: "",
       option: "",
       image: ""
-    }
+    },
+    viewData: {}
   }),
 
   computed: {
@@ -433,14 +506,14 @@ export default {
   created() {
     this.initialize();
   },
- 
+
   mounted() {
     this.get_students();
   },
   methods: {
-     initialize(){
+    initialize() {
       this.get_students();
-     },
+    },
     moment: function(date) {
       return moment(date).format("YYYY-MM-DD");
     },
@@ -501,7 +574,8 @@ export default {
         formData.append("name", this.submit_data.name);
         formData.append("gender", this.submit_data.gender);
         formData.append("dob", this.submit_data.dob);
-        formData.append("province", this.submit_data.province);
+        formData.append("usertype", this.submit_data.usertype);
+        formData.append("phone_number", this.submit_data.phone_number);
         formData.append("year_department", this.submit_data.year_department);
         formData.append("department", this.submit_data.department);
         formData.append("option", this.submit_data.option);
@@ -512,6 +586,9 @@ export default {
           .then(() => {
             if (this.info.statusText == "Created") {
               this.dialogcreate = false;
+              this.snackbarText = "Create Success";
+                this.snackbarColor = "green";
+                this.snackbar = true;
               this.get_students();
             } else {
               alert("Create Student Error");
@@ -532,8 +609,14 @@ export default {
       // console.log(item.type._id);
       this.submit_edit_data = Object.assign({}, item);
       this.submit_edit_data.year_department =
-      this.submit_edit_data.year_department + "";
+        this.submit_edit_data.year_department + "";
       this.submit_edit_data.id = item.id;
+    },
+    viewItem(item) {
+      // console.log(item);
+      // console.log(item.type._id);
+      this.viewData = Object.assign({}, item);
+      console.log(this.viewData);
     },
     async edit_student() {
       if (this.submit_edit_data.usertype == "Ingénieure") {
@@ -562,7 +645,8 @@ export default {
         formData.append("name", this.submit_edit_data.name);
         formData.append("gender", this.submit_edit_data.gender);
         formData.append("dob", this.submit_edit_data.dob);
-        formData.append("province", this.submit_edit_data.province);
+        formData.append("phone_number", this.submit_edit_data.phone_number);
+        formData.append("usertype", this.submit_edit_data.usertype);
         formData.append(
           "year_department",
           this.submit_edit_data.year_department
@@ -580,8 +664,10 @@ export default {
           .then(() => {
             if (this.info.statusText == "Created") {
               this.get_students();
-              alert("Success");
               this.dialogUpdate = false;
+              this.snackbarText = "Edit Success";
+                this.snackbarColor = "green";
+                this.snackbar = true;
             } else {
               alert("Create Student Error");
             }
@@ -600,7 +686,9 @@ export default {
             if (this.info) {
               if (this.info.statusText == "OK") {
                 this.get_students();
-                alert("Delete Success");
+                this.snackbarText = "Delete Success";
+                this.snackbarColor = "green";
+                this.snackbar = true;
               } else {
                 alert("Delete Student Error");
               }
@@ -619,5 +707,25 @@ export default {
 .header-dialog {
   font-weight: 600;
   color: #0062e0;
+}
+.name {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.usertype {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.coninfo {
+  display: flex;
+  flex-direction: row;
+}
+.information {
+  width: 30%;
+  text-align: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
 }
 </style>

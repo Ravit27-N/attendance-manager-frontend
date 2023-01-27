@@ -7,8 +7,18 @@
           class="select-input"
           :items="items"
           v-model="selectOption"
-          label="Type Barchart"
+          label="Data Type Barchart"
           solo
+        ></v-select>
+      </v-col>
+      <v-col cols="12" sm="2">
+        <v-select
+          class="select-input"
+          :items="templateitems"
+          label="Chart Template"
+          v-model="themechart"
+          solo
+          @change="updateTheme"
         ></v-select>
       </v-col>
     </div>
@@ -81,7 +91,6 @@
         Get Data
         <v-icon right dark>mdi-share</v-icon>
       </v-btn>
-      
     </div>
     <div class="row3 barchart-group mx-10 mt-10">
       <apexchart
@@ -111,6 +120,17 @@ export default {
   data: () => ({
     start_date: null,
     items: ["Department", "Daily", "Monthly"],
+    templateitems: [
+      "palette1",
+      "palette2",
+      "palette3",
+      "palette4",
+      "palette5",
+      "palette6",
+      "palette7",
+      "palette8",
+      "palette9"
+    ],
     selectOption: "Department",
     end_date: null,
     menu: false,
@@ -119,21 +139,38 @@ export default {
     options_bar: {
       chart: {
         id: "barchart-month",
+        animations: {
+          speed: 200
+        },
         type: "bar",
         events: {}
       },
+      theme: {
+        mode: "light",
+        palette: "palette1",
+        monochrome: {
+          enabled: false,
+          color: "#255aee",
+          shadeTo: "light",
+          shadeIntensity: 0.65
+        }
+      },
       title: {
-        text: "Attendance",
+        text: "Daily Attendance",
         align: "center",
         style: {
           fontSize: "20px"
         }
       },
+      plotOptions: {
+        bar: {
+          distributed: true
+        }
+      },
       xaxis: {
-        categories: [],
+        categories: ["GIM", "GIC", "Test"],
         labels: {
           style: {
-            colors: ["#F44336", "#C9F400", "#9C27B0"],
             fontSize: "1rem"
           }
         }
@@ -156,6 +193,13 @@ export default {
     // this.getattendance();
   },
   methods: {
+    updateTheme() {
+      this.options_bar = {
+        theme: {
+          palette: this.themechart
+        }
+      };
+    },
     settoday: function() {
       var currentTime = new Date();
       const convertTime = moment(currentTime).format("YYYY-MM-DD");
@@ -203,7 +247,7 @@ export default {
         .then(response => (this.info = response))
         .then(() => {
           if (this.info) {
-          //  console.log(this.info.data);
+            //  console.log(this.info.data);
             let i = 0;
             // console.log(this.info.data.data);
             let getdata = this.info.data.data;
@@ -211,7 +255,9 @@ export default {
             let data = [];
             for (i in getdata) {
               if (getdata[i].count != 0) {
-                categories[i] =  moment(getdata[i].category).format("YYYY-MM-DD");
+                categories[i] = moment(getdata[i].category).format(
+                  "YYYY-MM-DD"
+                );
                 data[i] = getdata[i].count;
               }
             }
@@ -233,7 +279,7 @@ export default {
         .then(response => (this.info = response))
         .then(() => {
           if (this.info) {
-          //  console.log(this.info.data);
+            //  console.log(this.info.data);
             let i = 0;
             // console.log(this.info.data.data);
             let getdata = this.info.data.data;
@@ -241,7 +287,7 @@ export default {
             let data = [];
             for (i in getdata) {
               if (getdata[i].count != 0) {
-                categories[i] =  moment(getdata[i].category).format("YYYY-MM");
+                categories[i] = moment(getdata[i].category).format("YYYY-MM");
                 data[i] = getdata[i].count;
               }
             }

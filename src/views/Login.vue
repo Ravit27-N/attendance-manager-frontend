@@ -84,7 +84,8 @@
 </template>
  
   <script>
-import axios from "axios";
+// import axios from "axios";
+import UserService from "../services/UserService";
 export default {
   data: () => ({
     step: 1,
@@ -99,26 +100,19 @@ export default {
   }),
   methods: {
     login() {
-      alert("Login");
-      
-        axios
-          .post(`http://localhost:3000/user/login`, this.submit_data)
-          .then(response => (this.info = response))
-          .then(() => {
-    
-         
-              sessionStorage.setItem("Token", this.info.data.token);
+        UserService.login(this.submit_data)
+        .then(response => {
+          sessionStorage.setItem("Token", response.data.token);
               this.snackbarText = "Login Success";
               this.snackbarColor = "green";
               this.snackbar = true;
               setTimeout(() => {
                 this.$router.push({ name: "Admin" });
               }, 2000);
-
-          })
-          .catch(e => {
-            console.log(e);
-          });
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
   },
   props: {}

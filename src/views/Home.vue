@@ -129,6 +129,7 @@ export default {
           console.log(e);
         });
     },
+ 
     submit_from() {
       if (this.submit_data.student_id.length <= 0) {
         alert("Student ID must be input");
@@ -163,7 +164,7 @@ export default {
             if (this.info.data.student == null) {
               this.$refs.form.reset();
               this.snackbarColor = "red";
-              this.snackbarText = "Please register before join library";
+              this.snackbarText = "Student's ID cannot find! Please register before join library";
               this.snackbar = true;
             } else {
               this.upload_attendance();

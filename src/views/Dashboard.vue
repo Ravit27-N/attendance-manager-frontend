@@ -3,10 +3,10 @@
     <v-row>
       <v-col cols="12" sm="12" md="12">
         <div class="row1 mt-10">
-          <DashCard title="Today" number="120" picture_name="day-icon.png" />
-          <DashCard title="Week" number="750" picture_name="week-icon.png" />
-          <DashCard title="Month" number="3005" picture_name="month-icon.png" />
-          <DashCard title="Year" number="1120" picture_name="year-icon.png" />
+          <DashCard title="Today" :number="totaltoday" picture_name="day-icon.png" />
+          <DashCard title="Week" :number="totalweek" picture_name="week-icon.png" />
+          <DashCard title="Month" :number="totalmonth" picture_name="month-icon.png" />
+          <DashCard title="Year" :number="totalyear"  picture_name="year-icon.png" />
         </div>
         <div class="d-flex mx-10 mt-10">
           <v-col class="d-flex " cols="12" sm="2">
@@ -63,12 +63,17 @@
 import DashCard from "@/components/DashCard.vue";
 import axios from "axios";
 import moment from "moment";
+import AttendanceService from "../services/AttendanceService";
 
 export default {
   components: {
     DashCard
   },
   data: () => ({
+    totaltoday:0,
+    totalweel:0,
+    totalmonth:0,
+    totalyear:0,
     themechart:"palette1",
     items:["palette1","palette2","palette3","palette4","palette5","palette6","palette7","palette8","palette9"],
     testKey: 1,
@@ -210,6 +215,7 @@ export default {
   mounted() {
     this.getattendance();
     this.getdailyattendance();
+    this.get_count_attendance();
   },
   methods: {
     updateTheme() {
@@ -240,6 +246,19 @@ export default {
               this.students[i].created = this.moment(this.students[i].created);
             }
           }
+        });
+    },
+    get_count_attendance() {
+      AttendanceService.getcountattendance()
+        .then(response => {
+          this.totaltoday=response.data.today;
+          this.totalweek=response.data.week;
+          this.totalmonth=response.data.month;
+          this.totalyear=response.data.year;
+          console.log(response);
+        })
+        .catch(e => {
+          console.log(e);
         });
     },
     getdailyattendance() {

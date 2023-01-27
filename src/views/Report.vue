@@ -95,6 +95,24 @@
         </v-data-table>
       </v-card>
     </div>
+    <div>
+      <v-snackbar
+        v-model="snackbar"
+        top
+        right
+        :color="snackbarColor"
+        timeout="2000"
+        rounded="pill"
+        height="20"
+      >
+        {{snackbarText}}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
   </div>
 </template>
 <script>
@@ -104,6 +122,9 @@ import moment from "moment";
 export default {
   data: () => ({
     start_date: null,
+    snackbarText: "",
+    snackbarColor: "",
+    snackbar: false,
     end_date: null,
     menu: false,
     menu2: false,
@@ -165,6 +186,9 @@ export default {
                     this.students[i].created
                   ).format("DD/MM/YYYY h:mm a");
                 }
+                this.snackbarText = "List Success";
+                this.snackbarColor = "green";
+                this.snackbar = true;
               }
             });
         } catch (e) {
@@ -180,8 +204,13 @@ export default {
     exportexcel() {
       if (this.students.length != 0) {
         excelParser().exportDataFromJSON(this.students, null, null);
-      }else{
-         alert("Please get data first");
+        this.snackbarText = "Export Excel Success";
+        this.snackbarColor = "green";
+        this.snackbar = true;
+      } else {
+        this.snackbarText = "Please get data first";
+        this.snackbarColor = "red";
+        this.snackbar = true;
       }
     }
   }
