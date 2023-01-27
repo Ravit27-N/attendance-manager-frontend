@@ -35,7 +35,7 @@ exports.UpdateStudent = async (req, res, next) => {
   try {
     let { student_id, name, gender,phone_number, dob, usertype, year_department, department, option } = req.body;
     var id = req.params.id;
-
+  
     if (req.file) {
       var baseUrl = "http://localhost:3000/uploads/" + req.file.filename;
     } else {

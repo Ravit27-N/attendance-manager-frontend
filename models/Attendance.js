@@ -46,6 +46,37 @@ class Attendance {
     return db.execute(sql);
   }
 
+
+  static countattendancetoday(todaydate) {
+    let sql = `SELECT COUNT(*) AS total
+               FROM attendances
+               WHERE DAY(created) = ${todaydate};`;
+    return db.execute(sql);
+  }
+
+  static countattendancethisweek(start,end) {
+    let sql = `SELECT COUNT(*) AS total
+               FROM attendances
+               WHERE DAY(created) between ${start} and ${end};`;
+    return db.execute(sql);
+  }
+ 
+  static countattendancethismonth(month) {
+    let sql = `SELECT COUNT(*) AS total
+               FROM attendances
+               WHERE Month(created) = ${month};`;
+    return db.execute(sql);
+  }
+
+ 
+
+  static countattendanceyear(year) {
+    let sql = `SELECT COUNT(*) AS total
+               FROM attendances
+               WHERE YEAR(created) = ${year};`;
+    return db.execute(sql);
+  }
+
 }
 
 module.exports = Attendance;
