@@ -49,6 +49,25 @@ exports.getLastFiveAttendances = async (req, res, next) => {
   }
 };
 
+//Top student join librery
+exports.getTopAttendances = async (req, res, next) => {
+  try {
+
+    if(req.query.length==undefined){
+      var length = 5;
+    }else{
+      var length = req.query.length;
+    }
+
+    let [attendance, _] = await Attendance.findmostattendanceregister(length);
+
+    res.status(200).json({attendance: attendance});
+
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getstudentdatatoday = async (req, res, next) => {
   try {
 
@@ -77,4 +96,3 @@ exports.getstudentdatatoday = async (req, res, next) => {
     next(error);
   }
 };
-

@@ -9,6 +9,8 @@ router.route("/")
   .post(AttendaceController.registerattandacnce);
 router.route("/lastfive")
   .get(AttendaceController.getLastFiveAttendances)
+router.route("/top")
+  .get(AttendaceController.getTopAttendances)
 router.route("/count")
   .get(AttendaceController.getstudentdatatoday)
 

@@ -46,6 +46,15 @@ class Attendance {
     return db.execute(sql);
   }
 
+  static findmostattendanceregister(number) {
+    let sql = ` SELECT att.student_id, COUNT(*) AS total,  can.*
+                FROM attendances as att LEFT JOIN candidates AS can on att.student_id = can.student_id
+                GROUP BY att.student_id
+                ORDER BY total DESC
+                LIMIT ${number}; `;
+    return db.execute(sql);
+  }
+
 
   static countattendancetoday(todaydate) {
     let sql = `SELECT COUNT(*) AS total
